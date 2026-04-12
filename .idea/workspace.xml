@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/TradePlayMt5.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/connection/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/connection/mt5_connection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/atr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/ema.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/ha.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/ha_analyzer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/ha_previous.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/rsi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/ema_rsi_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/ema_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/ha_rsi_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/range_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/trade_signal.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/trend_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/structure/market_context.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/structure/market_context_v2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/ema_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/ema_rsi_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/ema_rsi_non_overlaping.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/ha_rsi_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/ha_rsi_managed_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/managed_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/trailed_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/trailed_ema_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/connection/test_mt5_connection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/plot_ha_rsi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_atr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_ema.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_ha.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_ha_analyzer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_rsi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/structure/plot_market_structure.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/structure/plot_market_structure_v1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/structure/test_market_context.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/structure/test_market_context_v1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/structure/test_market_context_v2.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="3BGQ9iyUbETmOEQDQ45R7fS4S8T" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python tests.Python tests for test.connection.test_mt5_connection.TestMT5Connection.executor": "Run",
+    "Python tests.Python tests for test.connection.test_mt5_connection.test_ensure_connection.executor": "Run",
+    "Python tests.Python tests for test.connection.test_mt5_connection.test_initialize_connection.executor": "Run",
+    "Python tests.Python tests for test.connection.test_mt5_connection.test_shutdown.executor": "Run",
+    "Python tests.Python tests for test.connection.test_mt5_connection.test_symbol_selection.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_atr.TestATR.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_calculates_on_real_data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_decreases_with_low_volatility.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_increases_with_high_volatility.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_ema_changes_when_new_candle_arrives.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_ema_high_calculates_on_real_data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_offset_is_different_from_current.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHeikinAshiIndicatorWithRealMT5Data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHeikinAshiIndicatorWithRealMT5Data.test_heikin_ashi_calculates_on_real_data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_analyzer_runs_on_real_data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_count_methods_sum_to_lookback.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_streak_methods_are_valid.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_trend_strength_returns_valid_value.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_previous_value_updates_correctly.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_calculates_on_real_data.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_increases_with_strong_bullish_candle.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_rising_and_falling_flags.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data1.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data5.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_streaming_update.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_streaming_update_keeps_state_valid.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_batch_calculation_returns_valid_state.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_in_zone_logic_matches_price.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_incremental_update_consistency.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_swings_are_detected.executor": "Run",
+    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_trend_is_stable_across_small_updates.executor": "Run",
+    "Python tests.Python tests in test_ha.py.executor": "Run",
+    "Python tests.Python tests in test_market_context.py.executor": "Run",
+    "Python.ema_backtest.executor": "Run",
+    "Python.ema_rsi_backtest.executor": "Run",
+    "Python.ema_rsi_non_overlaping.executor": "Run",
+    "Python.ha_rsi_backtest.executor": "Run",
+    "Python.ha_rsi_managed_backtest.executor": "Run",
+    "Python.managed_backtest.executor": "Run",
+    "Python.trailed_backtest.executor": "Run",
+    "Python.trailed_ema_backtest.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error">
+    <configuration name="ha_rsi_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/ha_rsi_backtest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ha_rsi_managed_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/ha_rsi_managed_backtest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" />
+        <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1" />
+        <item itemvalue="Python.ha_rsi_backtest" />
+        <item itemvalue="Python.ha_rsi_managed_backtest" />
+        <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-164cda30dcd9-0af03a5fa574-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26830.99" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="" />
+      <created>1774112778001</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774112778001</updated>
+    </task>
+    <servers />
+  </component>
+</project>
