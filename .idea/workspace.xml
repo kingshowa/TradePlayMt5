@@ -5,52 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/TradePlayMt5.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/connection/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/connection/mt5_connection.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/atr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/ema.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/ha.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/ha_analyzer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/ha_previous.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/rsi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/ema_rsi_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/ema_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/ha_rsi_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/range_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/trade_signal.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/trend_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/structure/market_context.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/structure/market_context_v2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/ema_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/ema_rsi_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/ema_rsi_non_overlaping.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/ha_rsi_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/ha_rsi_managed_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/managed_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/trailed_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/trailed_ema_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/connection/test_mt5_connection.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/plot_ha_rsi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_atr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_ema.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_ha.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_ha_analyzer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_rsi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/structure/plot_market_structure.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/structure/plot_market_structure_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/structure/test_market_context.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/structure/test_market_context_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/structure/test_market_context_v2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/htf_analyzer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/htf_ltf_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/ltf_analyzer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/indicators/ema.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/indicators/ema.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/indicators/ha.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/indicators/ha.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/risk/take_profit.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/risk/take_profit.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,6 +98,7 @@
     "Python.ema_rsi_non_overlaping.executor": "Run",
     "Python.ha_rsi_backtest.executor": "Run",
     "Python.ha_rsi_managed_backtest.executor": "Run",
+    "Python.htf_ltf_backtest.executor": "Run",
     "Python.managed_backtest.executor": "Run",
     "Python.trailed_backtest.executor": "Run",
     "Python.trailed_ema_backtest.executor": "Run",
@@ -146,7 +110,7 @@
     "ignore.virus.scanning.warn.message": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error">
+  <component name="RunManager" selected="Python.htf_ltf_backtest">
     <configuration name="ha_rsi_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
@@ -191,19 +155,26 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="htf_ltf_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
@@ -238,11 +209,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.htf_ltf_backtest" />
         <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" />
         <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1" />
         <item itemvalue="Python.ha_rsi_backtest" />
         <item itemvalue="Python.ha_rsi_managed_backtest" />
-        <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle" />
       </list>
     </recent_temporary>
   </component>

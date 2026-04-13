@@ -361,8 +361,8 @@ class HeikinAshiIndicator(BaseIndicator):
         This gives the new reversal candle a meaningful comparison baseline.
         """
         return (
-            previous_trend.last_candle_growth_pct * 0.8
-            + previous_trend.avg_candle_growth_pct * 0.2
+            previous_trend.last_candle_growth_pct * 0.7
+            + previous_trend.avg_candle_growth_pct * 0.3
         )
 
     def _advance_trend(self, ha: Candle) -> None:

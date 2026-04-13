@@ -142,7 +142,7 @@ class EMAIndicator(BaseIndicator):
         """
         return abs(self.slope(offset=offset)) < slope_threshold
 
-    def is_uptrend(self, current_price: float, slope_threshold: float, offset: int | None = None) -> bool:
+    def is_uptrend(self, current_price: float, slope_threshold: float = 0.0, offset: int | None = None) -> bool:
         """
         Confirmed uptrend:
         - current price above EMA
@@ -156,7 +156,7 @@ class EMAIndicator(BaseIndicator):
             and self.slope(offset=offset) >= slope_threshold
         )
 
-    def is_downtrend(self, current_price: float, slope_threshold: float, offset: int | None = None) -> bool:
+    def is_downtrend(self, current_price: float, slope_threshold: float = 0.0, offset: int | None = None) -> bool:
         """
         Confirmed downtrend:
         - current price below EMA
