@@ -151,8 +151,8 @@ def backtest_htf_ltf(
     # ltf_series   = provider.fetch(symbol, TIMEFRAMES[ltf_timeframe], ltf_bars)
     # htf_series   = provider.fetch(symbol, TIMEFRAMES[htf_timeframe], htf_bars)
 
-    START_DATE = datetime(2021, 1, 1)
-    END_DATE = datetime(2023, 1, 1)
+    START_DATE = datetime(2025, 1, 1)
+    END_DATE = datetime(2026, 12, 30)
 
     ltf_series = provider.fetch_range(
         symbol,
@@ -442,8 +442,8 @@ if __name__ == "__main__":
         htf_bars        = 2000,
         ltf_cutoff      = 150,
         htf_cutoff      = 60,
-        balance         = 200.0,
-        use_strategy_close = False,
+        balance         = 1000.0,
+        use_strategy_close = True,
         use_tp          = True,
-        htf_ema_enabled = True,
+        htf_ema_enabled = False,
     )

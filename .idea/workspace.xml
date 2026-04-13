@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/htf_analyzer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/htf_ltf_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/ltf_analyzer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/golden_ribon_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/indicators/ema.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/indicators/ema.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/indicators/ha.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/indicators/ha.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/risk/take_profit.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/risk/take_profit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/risk/stop_loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/risk/stop_loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/strategy/htf_ltf/ltf_analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/ltf_analyzer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/trades_outcome_htf_ltf.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/trades_outcome_htf_ltf.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +94,7 @@
     "Python.ema_backtest.executor": "Run",
     "Python.ema_rsi_backtest.executor": "Run",
     "Python.ema_rsi_non_overlaping.executor": "Run",
+    "Python.golden_ribbon_backtest.executor": "Run",
     "Python.ha_rsi_backtest.executor": "Run",
     "Python.ha_rsi_managed_backtest.executor": "Run",
     "Python.htf_ltf_backtest.executor": "Run",
@@ -110,7 +109,29 @@
     "ignore.virus.scanning.warn.message": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.htf_ltf_backtest">
+  <component name="RunManager" selected="Python.golden_ribbon_backtest">
+    <configuration name="golden_ribbon_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="ha_rsi_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
@@ -125,28 +146,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/ha_rsi_backtest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="ha_rsi_managed_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="TradePlayMt5" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/ha_rsi_managed_backtest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -209,11 +208,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.golden_ribbon_backtest" />
         <item itemvalue="Python.htf_ltf_backtest" />
         <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" />
         <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1" />
         <item itemvalue="Python.ha_rsi_backtest" />
-        <item itemvalue="Python.ha_rsi_managed_backtest" />
       </list>
     </recent_temporary>
   </component>
