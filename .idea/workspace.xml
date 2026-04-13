@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/golden_ribon_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/risk/stop_loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/risk/stop_loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/strategy/htf_ltf/ltf_analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/htf_ltf/ltf_analyzer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/trades_outcome_htf_ltf.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/trades_outcome_htf_ltf.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

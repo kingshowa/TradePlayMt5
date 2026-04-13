@@ -476,7 +476,7 @@ def backtest_golden_ribbon(
 
 if __name__ == "__main__":
     backtest_golden_ribbon(
-        symbol          = SYMBOLS["Gold"],
+        symbol          = SYMBOLS["Silver"],
         timeframe       = "5m",
         bars            = 100_000,
         cut_off         = 300,
