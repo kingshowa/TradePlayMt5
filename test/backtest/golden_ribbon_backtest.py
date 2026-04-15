@@ -1,6 +1,9 @@
 import csv
+import json
 import math
+import os
 from datetime import datetime
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -152,12 +155,21 @@ def _compute_stats(df: pd.DataFrame, initial_balance: float) -> dict:
     }
 
 
-def _print_stats(stats: dict, symbol: str, timeframe: str, initial_balance: float, final_balance: float) -> None:
+def _print_stats(
+    stats: dict,
+    symbol: str,
+    timeframe: str,
+    initial_balance: float,
+    final_balance: float,
+    start_date: datetime,
+    end_date: datetime,
+) -> None:
     """Print a formatted performance summary to stdout."""
     sep = "─" * 52
 
     print(f"\n{sep}")
     print(f"  Golden Ribbon Backtest — {symbol} {timeframe.upper()}")
+    print(f"  Period: {start_date.date()} → {end_date.date()}")
     print(sep)
     print(f"  {'Initial balance':<28} {initial_balance:>10.2f}")
     print(f"  {'Final balance':<28} {final_balance:>10.2f}")
@@ -193,7 +205,14 @@ def _print_stats(stats: dict, symbol: str, timeframe: str, initial_balance: floa
 # Chart
 # =============================================================================
 
-def _plot_results(df: pd.DataFrame, stats: dict, symbol: str, timeframe: str) -> None:
+def _plot_results(
+    df: pd.DataFrame,
+    stats: dict,
+    symbol: str,
+    timeframe: str,
+    start_date: datetime,
+    end_date: datetime,
+) -> None:
     """
     Three-panel chart:
       1. Equity curve with per-trade PnL markers.
@@ -208,6 +227,7 @@ def _plot_results(df: pd.DataFrame, stats: dict, symbol: str, timeframe: str) ->
     fig = plt.figure(figsize=(14, 9))
     fig.suptitle(
         f"Golden Ribbon Backtest — {symbol} {timeframe.upper()}   "
+        f"{start_date.date()} → {end_date.date()}   "
         f"Win rate: {stats['win_rate']*100:.1f}%   "
         f"PF: {stats['profit_factor']:.2f}   "
         f"Return: {stats['total_return_pct']:+.1f}%",
@@ -303,6 +323,89 @@ def _append_trade_row(
             trade.reason,
         ])
 
+# =============================================================================
+# Experiment summary log helpers
+# =============================================================================
+
+_SUMMARY_HEADER = [
+    "RunTimestamp", "Comment", "Symbol", "Timeframe", "StartDate", "EndDate", "Candles", "CutOff",
+    "InitialBalance", "FinalBalance", "UseCloseSignal",
+    "TotalTrades", "Wins", "Losses", "Breakeven", "WinRate", "ProfitFactor",
+    "AvgWin", "AvgLoss", "BestTrade", "WorstTrade", "TotalPnL",
+    "MaxConsecWins", "MaxConsecLoss", "MaxDrawdown", "MaxDrawdownPct",
+    "TotalReturnPct", "SharpeRatio",
+    "ExitSL", "ExitTP", "ExitStrategyClose", "ExitForceClose",
+    "BuyTrades", "SellTrades",
+    "StrategyParams", "TradeLogFile",
+]
+
+
+def _append_summary_row(
+    path: str,
+    comment_name: str,
+    stats: dict,
+    strategy_params: dict,
+    symbol: str,
+    timeframe: str,
+    start_date: datetime,
+    end_date: datetime,
+    candles_count: int,
+    cut_off: int,
+    initial_balance: float,
+    final_balance: float,
+    use_close_signal: bool,
+    trade_log_file: str,
+) -> None:
+    """Append one backtest result row to a persistent experiment results CSV."""
+    file_exists = os.path.exists(path) and os.path.getsize(path) > 0
+    exits = stats.get("exits_by_type", {})
+    dirs = stats.get("exits_by_dir", {})
+
+    row = {
+        "RunTimestamp": datetime.now().isoformat(timespec="seconds"),
+        "Comment": comment_name,
+        "Symbol": symbol,
+        "Timeframe": timeframe,
+        "StartDate": start_date.date().isoformat(),
+        "EndDate": end_date.date().isoformat(),
+        "Candles": candles_count,
+        "CutOff": cut_off,
+        "InitialBalance": f"{initial_balance:.2f}",
+        "FinalBalance": f"{final_balance:.4f}",
+        "UseCloseSignal": use_close_signal,
+        "TotalTrades": stats["total_trades"],
+        "Wins": stats["wins"],
+        "Losses": stats["losses"],
+        "Breakeven": stats["breakeven"],
+        "WinRate": f"{stats['win_rate']:.6f}",
+        "ProfitFactor": f"{stats['profit_factor']:.6f}",
+        "AvgWin": f"{stats['avg_win']:.6f}",
+        "AvgLoss": f"{stats['avg_loss']:.6f}",
+        "BestTrade": f"{stats['best_trade']:.6f}",
+        "WorstTrade": f"{stats['worst_trade']:.6f}",
+        "TotalPnL": f"{stats['total_pnl']:.6f}",
+        "MaxConsecWins": stats["max_consec_wins"],
+        "MaxConsecLoss": stats["max_consec_loss"],
+        "MaxDrawdown": f"{stats['max_drawdown']:.6f}",
+        "MaxDrawdownPct": f"{stats['max_drawdown_pct']:.6f}",
+        "TotalReturnPct": f"{stats['total_return_pct']:.6f}",
+        "SharpeRatio": f"{stats['sharpe_ratio']:.6f}",
+        "ExitSL": exits.get("SL", 0),
+        "ExitTP": exits.get("TP", 0),
+        "ExitStrategyClose": exits.get("StrategyClose", 0),
+        "ExitForceClose": exits.get("ForceClose", 0),
+        "BuyTrades": dirs.get("BUY", 0),
+        "SellTrades": dirs.get("SELL", 0),
+        "StrategyParams": json.dumps(strategy_params, sort_keys=True),
+        "TradeLogFile": trade_log_file,
+    }
+
+    with open(path, "a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=_SUMMARY_HEADER)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow(row)
+
 
 # =============================================================================
 # Backtest
@@ -311,12 +414,17 @@ def _append_trade_row(
 def backtest_golden_ribbon(
     symbol: str         = SYMBOLS["Gold"],
     timeframe: str      = "5m",
-    bars: int           = 100_000,
+    start_date: datetime = datetime(2022, 1, 1),
+    end_date: datetime   = datetime(2025, 12, 31),
     cut_off: int        = 300,
     initial_balance: float = 200.0,
     use_close_signal: bool = True,
     output_file: str    = "trades_golden_ribbon.csv",
-) -> None:
+    strategy_params: Optional[dict] = None,
+    comment_name: str   = "manual_run",
+    summary_file: str   = "golden_ribbon_experiment_results.csv",
+    plot: bool          = True,
+) -> Optional[dict]:
     """
     Run a candle-by-candle backtest of the GoldenRibbonStrategy.
 
@@ -324,7 +432,8 @@ def backtest_golden_ribbon(
     ----------
     symbol            MT5 symbol string.
     timeframe         Key into TIMEFRAMES dict (e.g. "5m", "1m", "15m").
-    bars              Number of historical candles to fetch.
+    start_date        First candle date/time to include in the dataset.
+    end_date          Last candle date/time to include in the dataset.
     cut_off           Candles used to warm up the strategy before trading starts.
                       Must be large enough for all indicators to initialise
                       (recommended: ≥ 200 for EMA 50 + ATR 20-bar average).
@@ -332,35 +441,58 @@ def backtest_golden_ribbon(
     use_close_signal  Whether the strategy emits CLOSE signals.
                       When True:  trades close on ribbon reversal or RSI 50 cross.
                       When False: trades only close via SL / TP.
-    output_file       Path to the CSV results file.
+    output_file       Path to the per-trade CSV results file.
+    strategy_params   Dictionary of GoldenRibbonStrategy constructor inputs.
+                      Paste trained parameters here to reproduce a candidate.
+    comment_name      Manual label saved into the experiment summary CSV so
+                      each run is identifiable later.
+    summary_file      Append-only CSV where one summary row is saved per run.
+    plot              Whether to show the equity/drawdown/PnL chart.
 
     Exit priority per candle (when a trade is open)
     -----------------------------------------------
     1. SL / TP intrabar check  — based on candle high/low (can be hit at any
        point during the candle). Stops are always respected first.
-       Calls strategy.on_trade_closed(...) so the strategy state stays synced.
+       Calls strategy.on_stop_hit() on SL so the cooldown resets.
     2. Strategy CLOSE signal   — indicator-based, fires at candle close.
        Close price = candle.close of the signal candle.
     No new entry is opened on the same candle that closes a trade.
     """
     print(f"\n  Golden Ribbon Backtest")
-    print(f"  Symbol: {symbol}  |  Timeframe: {timeframe}  |  Bars: {bars:,}")
+    print(f"  Symbol: {symbol}  |  Timeframe: {timeframe}")
+    print(f"  Period: {start_date.date()} → {end_date.date()}")
     print(f"  Balance: {initial_balance:.2f}  |  Close signal: {use_close_signal}")
     print(f"  Warming up on first {cut_off} candles…")
+    print(f"  Comment: {comment_name}")
+
+    # Accept trained inputs in this format:
+    # strategy_params = {"ema_fast_period": 13, ...}
+    # Any missing parameter falls back to GoldenRibbonStrategy defaults.
+    if strategy_params is None:
+        strategy_params = {}
+    else:
+        strategy_params = dict(strategy_params)
+
+    print(f"  Strategy params: {strategy_params if strategy_params else 'DEFAULTS'}")
 
     # ── Data ─────────────────────────────────────────────────────────────
     provider = MT5MarketDataProvider()
-    # series   = provider.fetch(symbol, TIMEFRAMES[timeframe], bars)
-
-    START_DATE = datetime(2022, 1, 1)
-    END_DATE = datetime(2023, 12, 30)
-
-    series = provider.fetch_range(
+    series   = provider.fetch_range(
         symbol,
         TIMEFRAMES[timeframe],
-        START_DATE,
-        END_DATE
+        start_date,
+        end_date,
     )
+
+    total_candles = len(series._candles)
+    print(f"  Loaded {total_candles:,} candles ({total_candles - cut_off:,} tradeable after warm-up)")
+
+    if total_candles <= cut_off:
+        print(
+            f"  ERROR: dataset has {total_candles} candles but cut_off is {cut_off}. "
+            "Increase the date range or reduce cut_off."
+        )
+        return None
 
     warmup_series = series.subseries(0, cut_off)
 
@@ -368,6 +500,7 @@ def backtest_golden_ribbon(
     strategy     = GoldenRibbonStrategy(
         warmup_series,
         use_close_signal=use_close_signal,
+        **strategy_params,
     )
     risk_engine  = RiskManager()
 
@@ -380,7 +513,7 @@ def backtest_golden_ribbon(
     _write_csv_header(output_file)
 
     # ── Main loop ─────────────────────────────────────────────────────────
-    for i in range(cut_off, len(series._candles)):
+    for i in range(cut_off, total_candles):
         candle = series._candles[i]
 
         # Step 1 — advance all indicators, collect any signal
@@ -397,8 +530,11 @@ def backtest_golden_ribbon(
                 balance += pnl
                 trades_count += 1
 
-                # Keep strategy state in sync with externally managed trade exits.
-                strategy.on_trade_closed(exit_type=exit_type, exit_price=exit_price)
+                # Notify strategy so cooldown/state resets correctly.
+                if hasattr(strategy, "on_trade_closed"):
+                    strategy.on_trade_closed(exit_type=exit_type, exit_price=exit_price)
+                elif exit_type == "SL":
+                    strategy.on_stop_hit()
 
                 _append_trade_row(output_file, active_trade, exit_price, exit_type, pnl, balance)
                 active_trade           = None
@@ -418,7 +554,9 @@ def backtest_golden_ribbon(
                 balance += pnl
                 trades_count += 1
 
-                strategy.on_trade_closed(exit_type="StrategyClose", exit_price=exit_price)
+                if hasattr(strategy, "on_trade_closed"):
+                    strategy.on_trade_closed(exit_type="StrategyClose", exit_price=exit_price)
+
                 _append_trade_row(output_file, active_trade, exit_price, "StrategyClose", pnl, balance)
                 active_trade           = None
                 active_trade_entry_idx = None
@@ -435,7 +573,11 @@ def backtest_golden_ribbon(
         ):
             active_trade           = risk_engine.build_trade(signal, balance)
             active_trade_entry_idx = i
-            strategy.sync_trade(active_trade)
+
+            # Keep strategy state aligned with the risk-managed trade object
+            # when the strategy implementation supports sync_trade().
+            if hasattr(strategy, "sync_trade"):
+                strategy.sync_trade(active_trade)
 
     # ── Force-close any trade still open at end of data ──────────────────
     if active_trade is not None:
@@ -451,7 +593,9 @@ def backtest_golden_ribbon(
         balance += pnl
         trades_count += 1
 
-        strategy.on_trade_closed(exit_type="ForceClose", exit_price=exit_price)
+        if hasattr(strategy, "on_trade_closed"):
+            strategy.on_trade_closed(exit_type="ForceClose", exit_price=exit_price)
+
         _append_trade_row(output_file, active_trade, exit_price, "ForceClose", pnl, balance)
 
     # ── Results ───────────────────────────────────────────────────────────
@@ -461,13 +605,47 @@ def backtest_golden_ribbon(
 
     if df.empty:
         print("  No trades were executed. Check cut_off and strategy parameters.")
-        return
+        return None
 
     df["PnL"] = pd.to_numeric(df["PnL"], errors="coerce").fillna(0.0)
 
     stats = _compute_stats(df, initial_balance)
-    _print_stats(stats, symbol, timeframe, initial_balance, balance)
-    _plot_results(df, stats, symbol, timeframe)
+    _print_stats(stats, symbol, timeframe, initial_balance, balance, start_date, end_date)
+
+    _append_summary_row(
+        path=summary_file,
+        comment_name=comment_name,
+        stats=stats,
+        strategy_params=strategy_params,
+        symbol=symbol,
+        timeframe=timeframe,
+        start_date=start_date,
+        end_date=end_date,
+        candles_count=total_candles,
+        cut_off=cut_off,
+        initial_balance=initial_balance,
+        final_balance=balance,
+        use_close_signal=use_close_signal,
+        trade_log_file=output_file,
+    )
+    print(f"  Summary appended to {summary_file}")
+
+    if plot:
+        _plot_results(df, stats, symbol, timeframe, start_date, end_date)
+
+    return {
+        "comment_name": comment_name,
+        "symbol": symbol,
+        "timeframe": timeframe,
+        "start_date": start_date,
+        "end_date": end_date,
+        "candles_count": total_candles,
+        "initial_balance": initial_balance,
+        "final_balance": balance,
+        "use_close_signal": use_close_signal,
+        "strategy_params": strategy_params,
+        **stats,
+    }
 
 
 # =============================================================================
@@ -475,12 +653,46 @@ def backtest_golden_ribbon(
 # =============================================================================
 
 if __name__ == "__main__":
+    # Paste the best params from training here.
+    # strategy_params = {
+    #     "ema_fast_period": 13,
+    #     "ema_slow_period": 21,
+    #     "ema_trend_period": 100,
+    #     "rsi_period": 14,
+    #     "rsi_slope_offset": 2,
+    #     "rsi_buy_level": 52.0,
+    #     "rsi_sell_level": 48.0,
+    #     "atr_period": 10,
+    #     "ema_offset": 1,
+    #     "ema_fast_slope_threshold": 0.04
+    # }
+
+    strategy_params = {
+        "ema_fast_period": 13,
+        "ema_slow_period": 21,
+        "ema_trend_period": 100,
+        "rsi_period": 14,
+        "rsi_slope_offset": 1,
+        "rsi_buy_level": 50.0, #48
+        "rsi_sell_level": 50.0,
+        "atr_period": 10,
+        "ema_fast_slope_threshold": 0.04,
+    }
+
+    # Change this manually before each run so the summary row is identifiable.
+    comment_name = "1st test on training data"
+
     backtest_golden_ribbon(
-        symbol          = SYMBOLS["Silver"],
-        timeframe       = "5m",
-        bars            = 100_000,
-        cut_off         = 300,
-        initial_balance = 200.0,
-        use_close_signal= False,
-        output_file     = "trades_golden_ribbon.csv",
+        symbol           = SYMBOLS["Gold"],
+        timeframe        = "5m",
+        start_date       = datetime(2024, 1, 1),
+        end_date         = datetime(2025, 12, 30),
+        cut_off          = 300,
+        initial_balance  = 200.0,
+        use_close_signal = False,
+        output_file      = "trades_golden_ribbon.csv",
+        strategy_params  = strategy_params,
+        comment_name     = comment_name,
+        summary_file     = "golden_ribbon_experiment_results.csv",
+        plot             = True,
     )

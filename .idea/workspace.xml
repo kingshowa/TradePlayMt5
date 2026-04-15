@@ -5,8 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/adx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/indicators/psar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_parameter_study.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/session_classification.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_adx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_psar.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/strategy/golden_ribon_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/golden_ribon_strategy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/trades_golden_ribbon.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/trades_golden_ribbon.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/core/indicators/test_ha.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/core/indicators/test_ha.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +56,7 @@
     "Python tests.Python tests for test.connection.test_mt5_connection.test_initialize_connection.executor": "Run",
     "Python tests.Python tests for test.connection.test_mt5_connection.test_shutdown.executor": "Run",
     "Python tests.Python tests for test.connection.test_mt5_connection.test_symbol_selection.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_adx.TestADXWithRealMT5Data.test_adx_trend_threshold_helper_works.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_atr.TestATR.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_calculates_on_real_data.executor": "Run",
@@ -55,6 +69,7 @@
     "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_offset_is_different_from_current.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.executor": "Run",
+    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_calculate_returns_last_candle.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error.executor": "Run",
     "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1.executor": "Run",
@@ -84,16 +99,23 @@
     "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_incremental_update_consistency.executor": "Run",
     "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_swings_are_detected.executor": "Run",
     "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_trend_is_stable_across_small_updates.executor": "Run",
+    "Python tests.Python tests in test_adx.py.executor": "Run",
     "Python tests.Python tests in test_ha.py.executor": "Run",
     "Python tests.Python tests in test_market_context.py.executor": "Run",
+    "Python tests.Python tests in test_psar.py.executor": "Run",
     "Python.ema_backtest.executor": "Run",
     "Python.ema_rsi_backtest.executor": "Run",
     "Python.ema_rsi_non_overlaping.executor": "Run",
     "Python.golden_ribbon_backtest.executor": "Run",
+    "Python.golden_ribbon_parameter_study.executor": "Run",
     "Python.ha_rsi_backtest.executor": "Run",
     "Python.ha_rsi_managed_backtest.executor": "Run",
     "Python.htf_ltf_backtest.executor": "Run",
     "Python.managed_backtest.executor": "Run",
+    "Python.parabolic_sar_backtest.executor": "Run",
+    "Python.parabolic_sar_parameter_study.executor": "Run",
+    "Python.plot_psar_adx.executor": "Run",
+    "Python.session_classification.executor": "Run",
     "Python.trailed_backtest.executor": "Run",
     "Python.trailed_ema_backtest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -104,7 +126,7 @@
     "ignore.virus.scanning.warn.message": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.golden_ribbon_backtest">
+  <component name="RunManager" selected="Python.parabolic_sar_parameter_study">
     <configuration name="golden_ribbon_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
@@ -127,7 +149,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="ha_rsi_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="parabolic_sar_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -140,7 +162,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/ha_rsi_backtest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -149,7 +171,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="htf_ltf_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="parabolic_sar_parameter_study" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -162,7 +184,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/htf_ltf_backtest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -171,22 +193,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="plot_psar_adx" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/core/indicators" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_psar.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -197,17 +226,17 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/core/indicators/test_psar.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.parabolic_sar_parameter_study" />
+        <item itemvalue="Python.parabolic_sar_backtest" />
         <item itemvalue="Python.golden_ribbon_backtest" />
-        <item itemvalue="Python.htf_ltf_backtest" />
-        <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error" />
-        <item itemvalue="Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1" />
-        <item itemvalue="Python.ha_rsi_backtest" />
+        <item itemvalue="Python.plot_psar_adx" />
+        <item itemvalue="Python tests.Python tests in test_psar.py" />
       </list>
     </recent_temporary>
   </component>

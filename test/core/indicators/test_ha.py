@@ -74,6 +74,8 @@ class TestHAFormula(unittest.TestCase):
         ha = self._build_ha()
         result = ha.calculate(self.series)
 
+        print()
+        print(result)
         self.assertIsNotNone(result)
         self.assertEqual(result, ha.current_value)
         self.assertEqual(result, ha.values()[-1])
