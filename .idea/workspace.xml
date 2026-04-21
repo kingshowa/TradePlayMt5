@@ -5,21 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/adx.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/indicators/psar.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_parameter_study.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/session_classification.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_adx.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/core/indicators/test_psar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy_v1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_backtest1m.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_parameter_study_1m.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_validate_top10_survivors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/backtest/1m/save_candles.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/strategy/golden_ribon_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/golden_ribon_strategy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/trades_golden_ribbon.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/trades_golden_ribbon.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/core/indicators/test_ha.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/core/indicators/test_ha.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/risk/stop_loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/risk/stop_loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/_psar_study_tmp_trades.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/_psar_study_tmp_trades.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_experiment_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_experiment_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_filters.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_filters.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_full.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_full.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_psar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_psar.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/trades_parabolic_sar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/trades_parabolic_sar.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,87 +49,97 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python tests.Python tests for test.connection.test_mt5_connection.TestMT5Connection.executor": "Run",
-    "Python tests.Python tests for test.connection.test_mt5_connection.test_ensure_connection.executor": "Run",
-    "Python tests.Python tests for test.connection.test_mt5_connection.test_initialize_connection.executor": "Run",
-    "Python tests.Python tests for test.connection.test_mt5_connection.test_shutdown.executor": "Run",
-    "Python tests.Python tests for test.connection.test_mt5_connection.test_symbol_selection.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_adx.TestADXWithRealMT5Data.test_adx_trend_threshold_helper_works.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_atr.TestATR.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_calculates_on_real_data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_decreases_with_low_volatility.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_increases_with_high_volatility.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_ema_changes_when_new_candle_arrives.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_ema_high_calculates_on_real_data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_offset_is_different_from_current.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_calculate_returns_last_candle.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHeikinAshiIndicatorWithRealMT5Data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha.TestHeikinAshiIndicatorWithRealMT5Data.test_heikin_ashi_calculates_on_real_data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_analyzer_runs_on_real_data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_count_methods_sum_to_lookback.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_streak_methods_are_valid.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_trend_strength_returns_valid_value.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_live_update_matches_full_recalculation.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_previous_value_updates_correctly.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_calculates_on_real_data.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_increases_with_strong_bullish_candle.executor": "Run",
-    "Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_rising_and_falling_flags.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data1.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data5.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_streaming_update.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_streaming_update_keeps_state_valid.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_batch_calculation_returns_valid_state.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_in_zone_logic_matches_price.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_incremental_update_consistency.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_swings_are_detected.executor": "Run",
-    "Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_trend_is_stable_across_small_updates.executor": "Run",
-    "Python tests.Python tests in test_adx.py.executor": "Run",
-    "Python tests.Python tests in test_ha.py.executor": "Run",
-    "Python tests.Python tests in test_market_context.py.executor": "Run",
-    "Python tests.Python tests in test_psar.py.executor": "Run",
-    "Python.ema_backtest.executor": "Run",
-    "Python.ema_rsi_backtest.executor": "Run",
-    "Python.ema_rsi_non_overlaping.executor": "Run",
-    "Python.golden_ribbon_backtest.executor": "Run",
-    "Python.golden_ribbon_parameter_study.executor": "Run",
-    "Python.ha_rsi_backtest.executor": "Run",
-    "Python.ha_rsi_managed_backtest.executor": "Run",
-    "Python.htf_ltf_backtest.executor": "Run",
-    "Python.managed_backtest.executor": "Run",
-    "Python.parabolic_sar_backtest.executor": "Run",
-    "Python.parabolic_sar_parameter_study.executor": "Run",
-    "Python.plot_psar_adx.executor": "Run",
-    "Python.session_classification.executor": "Run",
-    "Python.trailed_backtest.executor": "Run",
-    "Python.trailed_ema_backtest.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests for test.connection.test_mt5_connection.TestMT5Connection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.connection.test_mt5_connection.test_ensure_connection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.connection.test_mt5_connection.test_initialize_connection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.connection.test_mt5_connection.test_shutdown.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.connection.test_mt5_connection.test_symbol_selection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_adx.TestADXWithRealMT5Data.test_adx_trend_threshold_helper_works.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_atr.TestATR.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_calculates_on_real_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_decreases_with_low_volatility.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_atr_increases_with_high_volatility.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_atr.TestATRWithRealMT5Data.test_live_update_matches_full_recalculation.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_ema_changes_when_new_candle_arrives.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_ema_high_calculates_on_real_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_live_update_matches_full_recalculation.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ema.TestEMAWithRealMT5Data.test_offset_is_different_from_current.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_calculate_returns_last_candle.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_live_update_same_timestamp_replaces_candle.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHAFormula.test_plot_renders_without_error1.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHeikinAshiIndicatorWithRealMT5Data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha.TestHeikinAshiIndicatorWithRealMT5Data.test_heikin_ashi_calculates_on_real_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_analyzer_runs_on_real_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_count_methods_sum_to_lookback.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_streak_methods_are_valid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_ha_analyzer.TestHeikinAshiAnalyzerWithRealMT5Data.test_trend_strength_returns_valid_value.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_live_update_matches_full_recalculation.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_previous_value_updates_correctly.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_calculates_on_real_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_increases_with_strong_bullish_candle.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.indicators.test_rsi.TestRSIWithRealMT5Data.test_rsi_rising_and_falling_flags.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data1.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_initialize_context_on_real_mt5_data5.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_streaming_update.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextRealMT5.test_streaming_update_keeps_state_valid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_batch_calculation_returns_valid_state.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_in_zone_logic_matches_price.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_incremental_update_consistency.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_swings_are_detected.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test.core.structure.test_market_context.TestMarketContextWithRealMT5.test_trend_is_stable_across_small_updates.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_adx.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_ha.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_market_context.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_psar.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ema_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ema_rsi_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ema_rsi_non_overlaping.executor&quot;: &quot;Run&quot;,
+    &quot;Python.golden_ribbon_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.golden_ribbon_parameter_study.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ha_rsi_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ha_rsi_managed_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.htf_ltf_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.managed_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.parabolic_sar_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.parabolic_sar_backtest1m.executor&quot;: &quot;Run&quot;,
+    &quot;Python.parabolic_sar_parameter_study.executor&quot;: &quot;Run&quot;,
+    &quot;Python.parabolic_sar_parameter_study_1m.executor&quot;: &quot;Run&quot;,
+    &quot;Python.parabolic_sar_validate_top10_survivors.executor&quot;: &quot;Run&quot;,
+    &quot;Python.plot_psar_adx.executor&quot;: &quot;Run&quot;,
+    &quot;Python.save_candles.executor&quot;: &quot;Run&quot;,
+    &quot;Python.session_classification.executor&quot;: &quot;Run&quot;,
+    &quot;Python.trailed_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.trailed_ema_backtest.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/21355/MasterIoT/Sem3/TradePlayMt5/test/backtest/1m&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Python.parabolic_sar_parameter_study">
-    <configuration name="golden_ribbon_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\21355\MasterIoT\Sem3\TradePlayMt5\test\backtest\1m" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.parabolic_sar_backtest1m">
+    <configuration name="parabolic_sar_backtest1m" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -136,11 +148,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest/1m" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/golden_ribbon_backtest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_backtest1m.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -149,7 +161,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="parabolic_sar_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="parabolic_sar_parameter_study_1m" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -158,11 +170,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest/1m" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_parameter_study_1m.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -171,7 +183,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="parabolic_sar_parameter_study" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="parabolic_sar_validate_top10_survivors" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,11 +192,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest/1m" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_validate_top10_survivors.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -215,28 +227,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_psar.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="save_candles" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest/1m" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/core/indicators/test_psar.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/1m/save_candles.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.parabolic_sar_parameter_study" />
-        <item itemvalue="Python.parabolic_sar_backtest" />
-        <item itemvalue="Python.golden_ribbon_backtest" />
+        <item itemvalue="Python.parabolic_sar_backtest1m" />
+        <item itemvalue="Python.parabolic_sar_parameter_study_1m" />
+        <item itemvalue="Python.parabolic_sar_validate_top10_survivors" />
         <item itemvalue="Python.plot_psar_adx" />
-        <item itemvalue="Python tests.Python tests in test_psar.py" />
+        <item itemvalue="Python.save_candles" />
       </list>
     </recent_temporary>
   </component>

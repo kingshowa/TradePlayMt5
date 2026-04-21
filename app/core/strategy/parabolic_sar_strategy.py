@@ -304,29 +304,32 @@ class ParabolicSarStrategy:
     # Close logic
     # ---------------------------------------------------------
     def _check_close(self, candle: Candle) -> Optional[StrategySignal]:
-        if not self._close_adx_allows():
-            return None
-
         reason = None
         pattern = None
 
         if self._open_direction == "LONG" and self.psar.flipped_sell():
+            if not self._close_adx_allows():
+                return None
+
             reason = (
-                f"PSAR flipped bearish against LONG with ADX confirmation | "
+                f"PSAR flipped bearish against LONG | "
                 f"PSAR: {self.current_psar:.4f} | "
                 f"Close: {candle.close:.4f} | "
                 f"ADX: {self.current_adx if self.current_adx is not None else 'disabled'}"
             )
-            pattern = "PSAR_BEARISH_FLIP_EXIT_ADX_CONFIRMED"
+            pattern = "PSAR_BEARISH_FLIP_EXIT"
 
         elif self._open_direction == "SHORT" and self.psar.flipped_buy():
+            if not self._close_adx_allows():
+                return None
+
             reason = (
-                f"PSAR flipped bullish against SHORT with ADX confirmation | "
+                f"PSAR flipped bullish against SHORT | "
                 f"PSAR: {self.current_psar:.4f} | "
                 f"Close: {candle.close:.4f} | "
                 f"ADX: {self.current_adx if self.current_adx is not None else 'disabled'}"
             )
-            pattern = "PSAR_BULLISH_FLIP_EXIT_ADX_CONFIRMED"
+            pattern = "PSAR_BULLISH_FLIP_EXIT"
 
         if reason is None:
             return None
@@ -344,9 +347,10 @@ class ParabolicSarStrategy:
 
     def _close_adx_allows(self) -> bool:
         """
-        Close signal is valid only if ADX confirms enough strength.
+        If ADX is disabled, PSAR flip alone is enough to close.
 
-        If ADX is disabled, close signal is allowed by default.
+        If ADX is enabled, PSAR flip close must be confirmed by
+        ADX >= close_signal_adx_limit.
         """
         if not self.use_adx:
             return True
@@ -416,10 +420,10 @@ class ParabolicSarStrategy:
             return None
 
         if direction == "BUY":
-            return float(self.current_psar)
+            return float(self.current_psar - 0.5* self.current_atr)
 
         if direction == "SELL":
-            return float(self.current_psar)
+            return float(self.current_psar + 0.5* self.current_atr)
 
         return None
 

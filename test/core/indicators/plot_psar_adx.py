@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 
 from app.core.indicators.psar import PSARIndicator
@@ -176,8 +178,8 @@ class PSARAndADXPlotter:
         else:
             print("Warning: No ADX values available to plot.")
 
-        ax2.axhline(adx_threshold, linestyle="--", linewidth=1, label=f"Threshold {adx_threshold}")
-        ax2.axhline(20, linestyle="--", linewidth=0.8)
+        ax2.axhline(adx_threshold, linestyle="dotted", linewidth=1, label=f"Threshold {adx_threshold}")
+        ax2.axhline(25, linestyle="--", linewidth=0.8)
         ax2.axhline(40, linestyle="--", linewidth=0.8)
 
         ax2.set_ylabel("ADX / DI")
@@ -195,14 +197,16 @@ if __name__ == "__main__":
     from app.core.market.mt5_timeframes import TIMEFRAMES
 
     provider = MT5MarketDataProvider()
-    series = provider.fetch("XAUUSDm", TIMEFRAMES["5m"], 350)
+    start_date = datetime(2026, 4, 15, 12, 0, 0)
+    end_date = datetime(2026, 4, 15, 16, 0, 0)
+    series = provider.fetch_range("EURJPYm", TIMEFRAMES["1m"], start_date, end_date)
 
     PSARAndADXPlotter.plot(
         series=series,
-        adx_period=14,
-        adx_threshold=25,
+        adx_period=10,
+        adx_threshold=18,
         psar_step=0.02,
-        psar_max_step=0.2,
+        psar_max_step=0.05,
         max_candles=200,
         title="XAUUSDm 5m - PSAR + ADX"
     )

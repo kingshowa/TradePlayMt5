@@ -480,7 +480,7 @@ def backtest_parabolic_sar(
 
 
 if __name__ == "__main__":
-    strategy_params = {
+    strategy_params1 = {
         "psar_step": 0.015,
         "psar_max_step": 0.15,
 
@@ -498,15 +498,29 @@ if __name__ == "__main__":
 
         "atr_period": 14,
     }
+    strategy_params = {
+        "psar_step": 0.025,
+        "psar_max_step": 0.25,
+        "use_ema_trend": True,
+        "ema_trend_period": 50,
+        "ema_offset": 1,
+        "ema_slope_threshold": 0.0,
+        "use_adx": True,
+        "adx_period": 14,
+        "adx_threshold": 20.0,
+        "require_adx_bias": False,
+        "close_signal_adx_limit": 0.0,
+        "atr_period": 14,
+    }
 
     backtest_parabolic_sar(
         symbol=SYMBOLS["Gold"],
-        timeframe="5m",
-        start_date=datetime(2024, 1, 1),
-        end_date=datetime(2025, 12, 30),
+        timeframe="1m",
+        start_date=datetime(2026, 1, 21),
+        end_date=datetime(2026, 12, 30),
         cut_off=300,
         initial_balance=200.0,
-        use_close_signal=False,
+        use_close_signal=True,
         output_file="trades_parabolic_sar.csv",
         strategy_params=strategy_params,
         comment_name="psar_first_test",
