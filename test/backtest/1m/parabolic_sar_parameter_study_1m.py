@@ -1297,23 +1297,23 @@ def preset_final_focused_grid() -> List[Dict[str, Any]]:
 
     for params in build_grid({
         # Best PSAR area from PSAR + ADX studies
-        "psar_step": [0.02],
-        "psar_max_step": [0.08, 0.10],
+        "psar_step": [0.005, 0.01, 0.015, 0.02, 0.025],
+        "psar_max_step": [0.05, 0.10, 0.15, 0.20, 0.25],
 
         # Keep ATR open for now
-        "atr_period": [7, 10, 14],
+        "atr_period": [14],
 
         # Now force EMA ON because this stage tests EMA + ADX together
         "use_ema_trend": [True],
-        "ema_trend_period": [34, 50, 75, 100, 200],
+        "ema_trend_period": [50, 100, 200],
         "ema_offset": [3],
-        "ema_slope_threshold": [0.0, 0.005, 0.01, 0.02],
+        "ema_slope_threshold": [0.0],
 
         # Keep ADX ON and focused around winners
-        "use_adx": [True],
-        "adx_period": [10, 14],
-        "adx_threshold": [15.0, 18.0],
-        "require_adx_bias": [False, True],
+        # "use_adx": [True],
+        # "adx_period": [10, 14],
+        # "adx_threshold": [15.0, 18.0],
+        # "require_adx_bias": [False, True],
     }):
         param_sets.append(params)
 
@@ -1323,13 +1323,13 @@ def preset_btc_ema_micro_grid() -> List[Dict[str, Any]]:
     param_sets = []
 
     for params in build_grid({
-        "psar_step": [0.004, 0.005, 0.006, 0.0075],
+        "psar_step": [0.005, 0.006, 0.0075],
         "psar_max_step": [0.04, 0.05, 0.06, 0.08],
         "atr_period": [14],
         "use_ema_trend": [True],
-        "ema_trend_period": [34, 50, 150, 200, 250],
+        "ema_trend_period": [200],
         "ema_offset": [3],
-        "ema_slope_threshold": [0.0, 0.0025, 0.005, 0.01],
+        "ema_slope_threshold": [0.0],
         "use_adx": [False],
     }):
         param_sets.append(params)
@@ -1341,7 +1341,7 @@ def preset_btc_ema_micro_grid() -> List[Dict[str, Any]]:
 # =============================================================================
 
 if __name__ == "__main__":
-    MODE = "study_ema"
+    MODE = "study_final_focused"
     # Recommended order:
     # 1. study_psar
     # 2. study_adx
@@ -1360,15 +1360,15 @@ if __name__ == "__main__":
     backtest_config = BacktestConfig(
         symbol=SYMBOLS["BTC"],
         timeframe="1m",
-        start_date=datetime(2025, 1, 1),
-        end_date=datetime(2025, 12, 30),
+        start_date=datetime(2026, 2, 12),
+        end_date=datetime(2026, 4, 14),
         cut_off=500,
         initial_balance=200.0,
         use_close_signal=True,
 
         risk_percent=0.01,
         rr=2.0,
-        atr_multiplier=1.5,
+        atr_multiplier=2.0,
         sl_mode="WIDER",
     )
 

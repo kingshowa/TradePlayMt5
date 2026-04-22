@@ -29,17 +29,17 @@ SYMBOLS = {
     "ETH": "ETHUSDm",
 }
 
-TOP_FILE_NAME = "parabolic_sar_corrected_study_full.csv"
+TOP_FILE_NAME = "parabolic_sar_corrected_study_final_focused.csv"
 
 OUTPUT_ALL_RESULTS = "parabolic_sar_top10_validation_results.csv"
 OUTPUT_SURVIVORS = "parabolic_sar_top10_survivors.csv"
 
-SYMBOL = SYMBOLS["BTC"]
+SYMBOL = SYMBOLS["ETH"]
 TIMEFRAME = "1m"
 
 INITIAL_BALANCE = 200.0
-CUT_OFF = 500
-TOP_N = 50
+CUT_OFF = 300
+TOP_N = 10
 
 USE_CLOSE_SIGNAL = True
 
@@ -58,18 +58,13 @@ SL_MODE = "WIDER"
 VALIDATION_WINDOWS = [
     {
         "name": "validation_2025_jly_spt",
-        "start": datetime(2025, 7, 1),
-        "end": datetime(2025, 9, 30),
+        "start": datetime(2026, 3, 16),
+        "end": datetime(2026, 3, 22),
     },
     {
         "name": "validation_2025_oct_dec",
-        "start": datetime(2025, 10, 1),
-        "end": datetime(2025, 12, 31),
-    },
-    {
-        "name": "validation_2026_jan_apr",
-        "start": datetime(2026, 1, 1),
-        "end": datetime(2026, 4, 30),
+        "start": datetime(2026, 3, 23),
+        "end": datetime(2026, 3, 29),
     },
 ]
 

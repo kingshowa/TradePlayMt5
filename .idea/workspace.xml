@@ -5,23 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_backtest1m.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_parameter_study_1m.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_validate_top10_survivors.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/backtest/1m/save_candles.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/risk/stop_loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/risk/stop_loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/_psar_study_tmp_trades.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/_psar_study_tmp_trades.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_backtest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_experiment_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_experiment_results.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_parameter_study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_filters.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_filters.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_full.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_full.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_psar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/parabolic_sar_study_study_psar.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/backtest/trades_parabolic_sar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/trades_parabolic_sar.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/core/indicators/plot_psar_adx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/parabolic_sar_strategy_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_backtest1m.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_backtest1m.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_corrected_study_final_focused.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_corrected_study_final_focused.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_corrected_study_final_focused_best.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_corrected_study_final_focused_best.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_corrected_study_final_focused_top_by_category.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_corrected_study_final_focused_top_by_category.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_experiment_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_experiment_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_parameter_study_1m.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_parameter_study_1m.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_top10_survivors.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_top10_survivors.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_top10_validation_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_top10_validation_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_validate_top10_survivors.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_validate_top10_survivors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/trades_parabolic_sar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/trades_parabolic_sar.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

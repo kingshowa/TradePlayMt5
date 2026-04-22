@@ -43,7 +43,7 @@ class ParabolicSarStrategy:
         ema_slope_threshold: float = 0.0,
 
         # ADX trend-strength filter
-        use_adx: bool = True,
+        use_adx: bool = False,
         adx_period: int = 14,
         adx_threshold: float = 25.0,
         require_adx_bias: bool = False,

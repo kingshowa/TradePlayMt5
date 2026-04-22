@@ -877,7 +877,7 @@ if __name__ == "__main__":
     "ema_slope_threshold": 0.0025,
     "use_adx": False,
 }
-    strategy_params = {
+    strategy_param3 = {
         "psar_step": 0.025,
         "psar_max_step": 0.05,
         "atr_period": 14,
@@ -888,11 +888,22 @@ if __name__ == "__main__":
         "use_adx": False,
     }
 
+    strategy_params = {
+        "psar_step": 0.025,
+        "psar_max_step": 0.05,
+        "atr_period": 14,
+        "use_ema_trend": True,
+        "ema_trend_period": 50,
+        "ema_offset": 3,
+        "ema_slope_threshold": 0.0,
+        "use_adx": False,
+    }
+
     backtest_parabolic_sar(
         symbol=SYMBOLS["BTC"],
         timeframe="1m",
-        start_date=datetime(2026, 4, 17),
-        end_date=datetime(2026, 12, 30),
+        start_date=datetime(2026, 4, 16),
+        end_date=datetime(2026, 4, 23),
         cut_off=500,
         initial_balance=200.0,
         use_close_signal=True,
@@ -904,9 +915,9 @@ if __name__ == "__main__":
         plot=True,
 
         risk_percent=0.01,
-        rr=1.0,
-        atr_multiplier=2,
-        sl_mode="TIGHTER",
+        rr=2.0,
+        atr_multiplier=1.5,
+        sl_mode="WIDER",
     )
 
     # sl_mode = "WIDER"
