@@ -1,18 +1,22 @@
+# Candle-only precision PSAR backtest. It does not call strategy.on_tick().
+# It calls strategy.check_candle_psar_cross(candle) before strategy.update(candle).
+
 import csv
 import json
 import math
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Iterable, Tuple
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import pandas as pd
 
+from app.core.market.candle import Candle
 from app.core.market.mt5_provider import MT5MarketDataProvider
 from app.core.market.mt5_timeframes import TIMEFRAMES
-from app.core.strategy.parabolic_sar_strategy_v1 import ParabolicSarStrategy
+from app.core.strategy.precision_psar_strategy import PrecisionPsarStrategy
 
 
 SYMBOLS = {
@@ -47,16 +51,11 @@ class BacktestTrade:
 
 class BacktestRiskManager:
     """
-    Explicit risk model for testing.
+    Backtest-only risk model matching the live RiskManager contract.
 
-    - risk_percent: percentage of current balance to risk per trade.
-    - rr: reward-to-risk ratio.
-    - atr_multiplier: ATR SL distance from candle low/high.
-    - sl_mode:
-        WIDER   -> choose farther stop, gives trade more room.
-        TIGHTER -> choose closer stop, smaller stop distance.
-        PSAR    -> use PSAR dot only.
-        ATR     -> use ATR stop only.
+    The strategy returns a raw PSAR-derived SL estimate through signal.sl.
+    This risk manager compares that PSAR SL with the ATR stop and selects the
+    final stop using sl_mode.
     """
 
     VALID_SL_MODES = {"WIDER", "TIGHTER", "PSAR", "ATR"}
@@ -70,10 +69,8 @@ class BacktestRiskManager:
     ):
         if risk_percent <= 0:
             raise ValueError("risk_percent must be greater than 0")
-
         if rr <= 0:
             raise ValueError("rr must be greater than 0")
-
         if atr_multiplier <= 0:
             raise ValueError("atr_multiplier must be greater than 0")
 
@@ -87,36 +84,33 @@ class BacktestRiskManager:
         self.sl_mode = sl_mode
 
     def build_trade(self, signal, balance: float) -> Optional[BacktestTrade]:
-        direction = signal.signal.upper()
+        direction = str(signal.signal).upper()
         candle = signal.candle
-        entry = candle.close
+        entry = float(candle.close)
         atr = signal.atr
         psar_sl = signal.sl
 
         if direction not in ("BUY", "SELL"):
             return None
-
         if atr is None or atr <= 0:
             return None
 
-        atr_sl = self._atr_stop(direction, candle, atr)
+        atr_sl = self._atr_stop(direction, candle, float(atr))
         final_sl, sl_source = self._select_stop(direction, entry, psar_sl, atr_sl)
-
         if final_sl is None:
             return None
 
         stop_distance = abs(entry - final_sl)
-
         if stop_distance <= 0:
             return None
 
         risk_amount = balance * self.risk_percent
         position_size = risk_amount / stop_distance
-
-        if direction == "BUY":
-            take_profit = entry + (stop_distance * self.rr)
-        else:
-            take_profit = entry - (stop_distance * self.rr)
+        take_profit = (
+            entry + stop_distance * self.rr
+            if direction == "BUY"
+            else entry - stop_distance * self.rr
+        )
 
         return BacktestTrade(
             direction=direction,
@@ -137,9 +131,8 @@ class BacktestRiskManager:
 
     def _atr_stop(self, direction: str, candle, atr: float) -> float:
         if direction == "BUY":
-            return candle.low - (self.atr_multiplier * atr)
-
-        return candle.high + (self.atr_multiplier * atr)
+            return float(candle.low) - self.atr_multiplier * atr
+        return float(candle.high) + self.atr_multiplier * atr
 
     def _select_stop(
         self,
@@ -150,56 +143,43 @@ class BacktestRiskManager:
     ):
         candidates = []
 
-        if psar_sl is not None and self._valid_stop(direction, entry, psar_sl):
-            candidates.append(("PSAR", psar_sl))
-
-        if atr_sl is not None and self._valid_stop(direction, entry, atr_sl):
-            candidates.append(("ATR", atr_sl))
+        if psar_sl is not None and self._valid_stop(direction, entry, float(psar_sl)):
+            candidates.append(("PSAR", float(psar_sl)))
+        if atr_sl is not None and self._valid_stop(direction, entry, float(atr_sl)):
+            candidates.append(("ATR", float(atr_sl)))
 
         if not candidates:
             return None, "NONE"
 
         if self.sl_mode == "PSAR":
-            for source, value in candidates:
-                if source == "PSAR":
-                    return value, source
-            return None, "NONE"
-
+            return next(((v, s) for s, v in candidates if s == "PSAR"), (None, "NONE"))
         if self.sl_mode == "ATR":
-            for source, value in candidates:
-                if source == "ATR":
-                    return value, source
-            return None, "NONE"
+            return next(((v, s) for s, v in candidates if s == "ATR"), (None, "NONE"))
 
         if direction == "BUY":
-            if self.sl_mode == "WIDER":
-                source, value = min(candidates, key=lambda item: item[1])
-            else:
-                source, value = max(candidates, key=lambda item: item[1])
+            source, value = (
+                min(candidates, key=lambda item: item[1])
+                if self.sl_mode == "WIDER"
+                else max(candidates, key=lambda item: item[1])
+            )
         else:
-            if self.sl_mode == "WIDER":
-                source, value = max(candidates, key=lambda item: item[1])
-            else:
-                source, value = min(candidates, key=lambda item: item[1])
+            source, value = (
+                max(candidates, key=lambda item: item[1])
+                if self.sl_mode == "WIDER"
+                else min(candidates, key=lambda item: item[1])
+            )
 
         return value, source
 
     def _valid_stop(self, direction: str, entry: float, stop: float) -> bool:
-        if direction == "BUY":
-            return stop < entry
-
-        return stop > entry
+        return stop < entry if direction == "BUY" else stop > entry
 
 
 class TradeSimulation:
     """
-    Candle-level SL / TP exit checker.
+    Conservative candle-level SL / TP checker.
 
-    Conservative rule:
-    If both SL and TP are touched in same candle, SL is assumed first.
-
-    When use_tp=False, take-profit checks are skipped, so exits are
-    controlled only by SL, strategy close/flip, or final force-close.
+    If SL and TP are both touched in a candle, SL is assumed first.
     """
 
     @staticmethod
@@ -213,85 +193,31 @@ class TradeSimulation:
         if direction == "BUY":
             if candle.low <= sl:
                 return sl, "SL", (sl - entry) * size
-
-            if use_tp and candle.high >= tp:
+            if use_tp and tp is not None and candle.high >= tp:
                 return tp, "TP", (tp - entry) * size
-
         else:
             if candle.high >= sl:
                 return sl, "SL", (entry - sl) * size
-
-            if use_tp and candle.low <= tp:
+            if use_tp and tp is not None and candle.low <= tp:
                 return tp, "TP", (entry - tp) * size
-
         return None
 
 
 _CSV_HEADER = [
-    "EntryTime",
-    "Direction",
-    "Entry",
-    "SL",
-    "TP",
-    "PositionSize",
-    "RiskAmount",
-    "StopDistance",
-    "RR",
-    "SLSource",
-    "PSAR_SL",
-    "ATR_SL",
-    "ExitPrice",
-    "ExitType",
-    "PnL",
-    "BalanceAfter",
-    "Pattern",
-    "Reason",
+    "EntryTime", "Direction", "Entry", "SL", "TP", "PositionSize",
+    "RiskAmount", "StopDistance", "RR", "SLSource", "PSAR_SL", "ATR_SL",
+    "ExitPrice", "ExitType", "PnL", "BalanceAfter", "Pattern", "Reason",
 ]
 
-
 _SUMMARY_HEADER = [
-    "RunTimestamp",
-    "Comment",
-    "Symbol",
-    "Timeframe",
-    "StartDate",
-    "EndDate",
-    "Candles",
-    "CutOff",
-    "InitialBalance",
-    "FinalBalance",
-    "UseCloseSignal",
-    "UseTP",
-    "RiskPercent",
-    "RR",
-    "ATRMultiplier",
-    "SLMode",
-    "TotalTrades",
-    "Wins",
-    "Losses",
-    "Breakeven",
-    "WinRate",
-    "ProfitFactor",
-    "AvgWin",
-    "AvgLoss",
-    "BestTrade",
-    "WorstTrade",
-    "TotalPnL",
-    "MaxConsecWins",
-    "MaxConsecLoss",
-    "MaxDrawdown",
-    "MaxDrawdownPct",
-    "TotalReturnPct",
-    "SharpeRatio",
-    "ExitSL",
-    "ExitTP",
-    "ExitStrategyClose",
-    "ExitForceClose",
-    "BuyTrades",
-    "SellTrades",
-    "SLSourcePSAR",
-    "SLSourceATR",
-    "StrategyParams",
+    "RunTimestamp", "Comment", "Symbol", "Timeframe", "StartDate", "EndDate",
+    "Candles", "CutOff", "InitialBalance", "FinalBalance", "UseTP",
+    "RiskPercent", "RR", "ATRMultiplier", "SLMode", "IntrabarPathMode",
+    "SameCandleTP", "TotalTrades", "Wins", "Losses", "Breakeven", "WinRate",
+    "ProfitFactor", "AvgWin", "AvgLoss", "BestTrade", "WorstTrade", "TotalPnL",
+    "MaxConsecWins", "MaxConsecLoss", "MaxDrawdown", "MaxDrawdownPct",
+    "TotalReturnPct", "SharpeRatio", "ExitSL", "ExitTP", "ExitForceClose",
+    "BuyTrades", "SellTrades", "SLSourcePSAR", "SLSourceATR", "StrategyParams",
     "TradeLogFile",
 ]
 
@@ -301,21 +227,14 @@ def _write_csv_header(path: str) -> None:
         csv.writer(file).writerow(_CSV_HEADER)
 
 
-def _append_trade_row(
-    path: str,
-    trade: BacktestTrade,
-    exit_price: float,
-    exit_type: str,
-    pnl: float,
-    balance_after: float,
-) -> None:
+def _append_trade_row(path: str, trade: BacktestTrade, exit_price: float, exit_type: str, pnl: float, balance_after: float) -> None:
     with open(path, "a", newline="") as file:
         csv.writer(file).writerow([
             trade.candle.time,
             trade.direction,
             f"{trade.entry:.5f}",
             f"{trade.stop_loss:.5f}",
-            f"{trade.take_profit:.5f}",
+            f"{trade.take_profit:.5f}" if trade.take_profit is not None else "",
             f"{trade.position_size:.6f}",
             f"{trade.risk_amount:.4f}",
             f"{trade.stop_distance:.5f}",
@@ -334,16 +253,13 @@ def _append_trade_row(
 
 def _compute_stats(df: pd.DataFrame, initial_balance: float) -> dict:
     pnl = df["PnL"]
-
     wins = pnl[pnl > 0]
     losses = pnl[pnl < 0]
-
     gross_profit = wins.sum()
     gross_loss = abs(losses.sum())
     profit_factor = gross_profit / gross_loss if gross_loss > 0 else float("inf")
 
     max_cw = max_cl = cur_cw = cur_cl = 0
-
     for value in pnl:
         if value > 0:
             cur_cw += 1
@@ -351,7 +267,6 @@ def _compute_stats(df: pd.DataFrame, initial_balance: float) -> dict:
         elif value < 0:
             cur_cl += 1
             cur_cw = 0
-
         max_cw = max(max_cw, cur_cw)
         max_cl = max(max_cl, cur_cl)
 
@@ -359,18 +274,11 @@ def _compute_stats(df: pd.DataFrame, initial_balance: float) -> dict:
     equity = initial_balance + cumulative
     running_peak = equity.cummax()
     drawdown = running_peak - equity
-
     max_dd = drawdown.max() if not drawdown.empty else 0.0
     peak_at_max_dd = running_peak.loc[drawdown.idxmax()] if not drawdown.empty else initial_balance
-
     max_dd_pct = max_dd / peak_at_max_dd * 100 if peak_at_max_dd > 0 else 0.0
-
     std_pnl = pnl.std()
-    sharpe = (
-        pnl.mean() / std_pnl * math.sqrt(len(pnl))
-        if std_pnl and std_pnl > 0
-        else 0.0
-    )
+    sharpe = pnl.mean() / std_pnl * math.sqrt(len(pnl)) if std_pnl and std_pnl > 0 else 0.0
 
     return {
         "total_trades": len(df),
@@ -396,19 +304,10 @@ def _compute_stats(df: pd.DataFrame, initial_balance: float) -> dict:
     }
 
 
-def _print_stats(
-    stats: dict,
-    symbol: str,
-    timeframe: str,
-    initial_balance: float,
-    final_balance: float,
-    start_date: datetime,
-    end_date: datetime,
-) -> None:
-    sep = "─" * 56
-
+def _print_stats(stats: dict, symbol: str, timeframe: str, initial_balance: float, final_balance: float, start_date: datetime, end_date: datetime) -> None:
+    sep = "─" * 62
     print(f"\n{sep}")
-    print(f"  Parabolic SAR Backtest — {symbol} {timeframe.upper()}")
+    print(f"  Precision PSAR Live-Tick Backtest — {symbol} {timeframe.upper()}")
     print(f"  Period: {start_date.date()} → {end_date.date()}")
     print(sep)
     print(f"  {'Initial balance':<30} {initial_balance:>10.2f}")
@@ -431,20 +330,6 @@ def _print_stats(
     print(f"  {'Sharpe ratio':<30} {stats['sharpe_ratio']:>10.3f}")
     print(sep)
 
-    print("  Exit breakdown:")
-    for exit_type, count in sorted(stats["exits_by_type"].items()):
-        print(f"    {exit_type:<28} {count:>10}")
-
-    print("  Direction breakdown:")
-    for direction, count in sorted(stats["exits_by_dir"].items()):
-        print(f"    {direction:<28} {count:>10}")
-
-    print("  SL source breakdown:")
-    for source, count in sorted(stats["sl_sources"].items()):
-        print(f"    {source:<28} {count:>10}")
-
-    print(sep)
-
 
 def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
     pnl = df["PnL"]
@@ -455,7 +340,7 @@ def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
 
     fig = plt.figure(figsize=(14, 9))
     fig.suptitle(
-        f"Parabolic SAR Backtest — {symbol} {timeframe.upper()}   "
+        f"Precision PSAR Live-Tick Backtest — {symbol} {timeframe.upper()}   "
         f"{start_date.date()} → {end_date.date()}   "
         f"Win rate: {stats['win_rate'] * 100:.1f}%   "
         f"PF: {stats['profit_factor']:.2f}   "
@@ -464,14 +349,7 @@ def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
         fontweight="bold",
     )
 
-    gs = gridspec.GridSpec(
-        3,
-        1,
-        figure=fig,
-        height_ratios=[3, 1.2, 1.5],
-        hspace=0.45,
-    )
-
+    gs = gridspec.GridSpec(3, 1, figure=fig, height_ratios=[3, 1.2, 1.5], hspace=0.45)
     ax1 = fig.add_subplot(gs[0])
     ax1.plot(cumulative.values, linewidth=1.4, label="Cumulative PnL")
     ax1.axhline(0, linewidth=0.6, linestyle="--")
@@ -481,13 +359,7 @@ def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
     ax1.grid(True, linewidth=0.4, alpha=0.5)
 
     ax2 = fig.add_subplot(gs[1], sharex=ax1)
-    ax2.fill_between(
-        range(len(drawdown)),
-        -drawdown.values,
-        0,
-        alpha=0.35,
-        label="Drawdown",
-    )
+    ax2.fill_between(range(len(drawdown)), -drawdown.values, 0, alpha=0.35, label="Drawdown")
     ax2.plot(-drawdown.values, linewidth=0.8)
     ax2.axhline(0, linewidth=0.5)
     ax2.set_ylabel("Drawdown")
@@ -503,33 +375,16 @@ def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
     ax3.set_ylabel("Frequency")
     ax3.legend(fontsize=8)
     ax3.grid(True, linewidth=0.4, alpha=0.5)
-
     plt.show()
 
 
 def _append_summary_row(
-    path,
-    comment_name,
-    stats,
-    strategy_params,
-    symbol,
-    timeframe,
-    start_date,
-    end_date,
-    candles_count,
-    cut_off,
-    initial_balance,
-    final_balance,
-    use_close_signal,
-    use_tp,
-    risk_percent,
-    rr,
-    atr_multiplier,
-    sl_mode,
-    trade_log_file,
+    path, comment_name, stats, strategy_params, symbol, timeframe, start_date,
+    end_date, candles_count, cut_off, initial_balance, final_balance, use_tp,
+    risk_percent, rr, atr_multiplier, sl_mode, intrabar_path_mode,
+    allow_same_candle_tp, trade_log_file,
 ):
     file_exists = os.path.exists(path) and os.path.getsize(path) > 0
-
     exits = stats.get("exits_by_type", {})
     dirs = stats.get("exits_by_dir", {})
     sl_sources = stats.get("sl_sources", {})
@@ -545,12 +400,13 @@ def _append_summary_row(
         "CutOff": cut_off,
         "InitialBalance": f"{initial_balance:.2f}",
         "FinalBalance": f"{final_balance:.4f}",
-        "UseCloseSignal": use_close_signal,
         "UseTP": use_tp,
         "RiskPercent": risk_percent,
         "RR": rr,
         "ATRMultiplier": atr_multiplier,
         "SLMode": sl_mode,
+        "IntrabarPathMode": intrabar_path_mode,
+        "SameCandleTP": allow_same_candle_tp,
         "TotalTrades": stats["total_trades"],
         "Wins": stats["wins"],
         "Losses": stats["losses"],
@@ -570,7 +426,6 @@ def _append_summary_row(
         "SharpeRatio": f"{stats['sharpe_ratio']:.6f}",
         "ExitSL": exits.get("SL", 0),
         "ExitTP": exits.get("TP", 0),
-        "ExitStrategyClose": exits.get("StrategyClose", 0),
         "ExitForceClose": exits.get("ForceClose", 0),
         "BuyTrades": dirs.get("BUY", 0),
         "SellTrades": dirs.get("SELL", 0),
@@ -582,218 +437,202 @@ def _append_summary_row(
 
     with open(path, "a", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=_SUMMARY_HEADER)
-
         if not file_exists:
             writer.writeheader()
-
         writer.writerow(row)
 
 
-def backtest_parabolic_sar(
-    symbol: str = SYMBOLS["Gold"],
+def _intrabar_prices(candle: Candle, mode: str = "conservative") -> list[Tuple[str, float]]:
+    """
+    Approximate tick sequence from OHLC.
+
+    This does not know the real intrabar path. The default is conservative-ish:
+    it moves first toward the side nearer to open, then the other extreme,
+    then close. This avoids always giving the strategy the favorable path.
+    """
+    mode = mode.lower()
+    if mode == "ohlc":
+        return [("open", candle.open), ("high", candle.high), ("low", candle.low), ("close", candle.close)]
+    if mode == "olhc":
+        return [("open", candle.open), ("low", candle.low), ("high", candle.high), ("close", candle.close)]
+    if mode == "conservative":
+        high_dist = abs(candle.high - candle.open)
+        low_dist = abs(candle.open - candle.low)
+        if high_dist <= low_dist:
+            return [("open", candle.open), ("high", candle.high), ("low", candle.low), ("close", candle.close)]
+        return [("open", candle.open), ("low", candle.low), ("high", candle.high), ("close", candle.close)]
+    raise ValueError("intrabar_path_mode must be one of: conservative, ohlc, olhc")
+
+
+def _remaining_candle_after_entry(candle: Candle, entry_price: float, direction: str, current_step: str, path_mode: str) -> Candle:
+    """
+    Build a conservative remaining-candle proxy after entry.
+
+    With OHLC data we cannot know exact post-entry path. We keep all adverse
+    extremes that could still happen. TP can be disabled on entry candle through
+    allow_same_candle_tp=False.
+    """
+    direction = direction.upper()
+    return Candle(
+        time=candle.time,
+        open=entry_price,
+        high=max(candle.high, entry_price),
+        low=min(candle.low, entry_price),
+        close=candle.close,
+        volume=candle.volume,
+    )
+
+
+def _trail_trade_with_psar(active_trade: BacktestTrade, psar_sl: Optional[float]) -> bool:
+    if psar_sl is None:
+        return False
+    psar_sl = float(psar_sl)
+    direction = active_trade.direction.upper()
+    if direction == "BUY" and psar_sl > active_trade.stop_loss and psar_sl < active_trade.entry:
+        active_trade.stop_loss = psar_sl
+        return True
+    if direction == "SELL" and psar_sl < active_trade.stop_loss and psar_sl > active_trade.entry:
+        active_trade.stop_loss = psar_sl
+        return True
+    return False
+
+
+def backtest_precision_psar(
+    symbol: str = SYMBOLS["BTC"],
     timeframe: str = "1m",
-    start_date: datetime = datetime(2025, 1, 1),
-    end_date: datetime = datetime(2026, 1, 1),
+    start_date: datetime = datetime(2026, 4, 16),
+    end_date: datetime = datetime(2026, 4, 28),
     cut_off: int = 500,
     initial_balance: float = 200.0,
-    use_close_signal: bool = True,
     use_tp: bool = True,
-    output_file: str = "trades_parabolic_sar.csv",
+    output_file: str = "trades_precision_psar.csv",
     strategy_params: Optional[dict] = None,
-    comment_name: str = "manual_run",
-    summary_file: str = "parabolic_sar_experiment_results.csv",
+    comment_name: str = "live_tick_validation",
+    summary_file: str = "precision_psar_experiment_results.csv",
     plot: bool = True,
-
-    # Explicit risk settings
     risk_percent: float = 0.01,
     rr: float = 2.0,
     atr_multiplier: float = 1.5,
     sl_mode: str = "WIDER",
+    intrabar_path_mode: str = "conservative",
+    allow_same_candle_tp: bool = False,
 ) -> Optional[dict]:
-
-    print("\n  Parabolic SAR Backtest")
+    print("\n  Precision PSAR Backtest — Candle Dot Cross")
     print(f"  Symbol: {symbol} | Timeframe: {timeframe}")
     print(f"  Period: {start_date.date()} → {end_date.date()}")
     print(f"  Initial balance: {initial_balance:.2f}")
     print(f"  Risk: {risk_percent * 100:.2f}% | RR: {rr:.2f} | ATR SL: {atr_multiplier:.2f}x | SL mode: {sl_mode}")
-    print(f"  Close signal: {use_close_signal}")
     print(f"  Take profit: {use_tp}")
+    print(f"  Intrabar path: {intrabar_path_mode} | Same-candle TP: {allow_same_candle_tp}")
     print(f"  Warm-up candles: {cut_off}")
     print(f"  Comment: {comment_name}")
 
     strategy_params = dict(strategy_params or {})
+    # Candle-only contract: check_candle_psar_cross() creates entries before update();
+    # update() only refreshes confirmed indicators after candle processing.
+    strategy_params["entry_on_update"] = False
+    strategy_params["use_close_signal"] = False
     print(f"  Strategy params: {strategy_params if strategy_params else 'DEFAULTS'}")
 
     provider = MT5MarketDataProvider()
-    series = provider.fetch_range(
-        symbol,
-        TIMEFRAMES[timeframe],
-        start_date,
-        end_date,
-    )
-
+    series = provider.fetch_range(symbol, TIMEFRAMES[timeframe], start_date, end_date)
     total_candles = len(series._candles)
-
-    print(
-        f"  Loaded {total_candles:,} candles "
-        f"({total_candles - cut_off:,} tradeable after warm-up)"
-    )
+    print(f"  Loaded {total_candles:,} candles ({total_candles - cut_off:,} tradeable after warm-up)")
 
     if total_candles <= cut_off:
         print("  ERROR: not enough candles for selected cut_off.")
         return None
 
     warmup_series = series.subseries(0, cut_off)
-
-    strategy = ParabolicSarStrategy(
-        warmup_series,
-        use_close_signal=use_close_signal,
-        **strategy_params,
-    )
-
-    risk_engine = BacktestRiskManager(
-        risk_percent=risk_percent,
-        rr=rr,
-        atr_multiplier=atr_multiplier,
-        sl_mode=sl_mode,
-    )
+    strategy = PrecisionPsarStrategy(warmup_series, **strategy_params)
+    risk_engine = BacktestRiskManager(risk_percent=risk_percent, rr=rr, atr_multiplier=atr_multiplier, sl_mode=sl_mode)
 
     balance = initial_balance
-    active_trade = None
-    active_trade_entry_idx = None
+    active_trade: Optional[BacktestTrade] = None
+    active_trade_entry_idx: Optional[int] = None
 
     _write_csv_header(output_file)
 
     for i in range(cut_off, total_candles):
         candle = series._candles[i]
 
-        # Update strategy first. Signal is based on this candle close.
-        signal = strategy.update(candle)
+        # 1) Use the previously confirmed indicator state, just like live trading
+        # before the candle has closed. Since this is a candle-only backtest,
+        # do NOT call on_tick(). Instead check whether this candle's OHLC range
+        # crossed the next PSAR trigger computed from the previous confirmed state.
+        opened_this_candle = False
+        if active_trade is None:
+            signal = strategy.check_candle_psar_cross(candle)
+            if signal is not None and signal.signal in ("BUY", "SELL"):
+                trade = risk_engine.build_trade(signal, balance)
+                if trade is not None:
+                    active_trade = trade
+                    active_trade_entry_idx = i
+                    opened_this_candle = True
+                    strategy.sync_trade(active_trade)
 
-        # Manage active trade.
-        if active_trade is not None and i > active_trade_entry_idx:
-            exit_result = TradeSimulation.check_exit(
-                active_trade,
-                candle,
-                use_tp=use_tp,
-            )
+                    # Entry-candle risk. SL is always checked; TP is optional because
+                    # OHLC cannot prove TP happened after the entry trigger.
+                    remaining = _remaining_candle_after_entry(
+                        candle,
+                        trade.entry,
+                        trade.direction,
+                        current_step="cross",
+                        path_mode=intrabar_path_mode,
+                    )
+                    exit_result = TradeSimulation.check_exit(
+                        trade,
+                        remaining,
+                        use_tp=(use_tp and allow_same_candle_tp),
+                    )
+                    if exit_result is not None:
+                        exit_price, exit_type, pnl = exit_result
+                        balance += pnl
+                        strategy.on_trade_closed(exit_type=exit_type, exit_price=exit_price)
+                        _append_trade_row(output_file, trade, exit_price, exit_type, pnl, balance)
+                        active_trade = None
+                        active_trade_entry_idx = None
 
+        # 2) Manage a trade that was already active before this candle.
+        if active_trade is not None and not opened_this_candle and i > active_trade_entry_idx:
+            exit_result = TradeSimulation.check_exit(active_trade, candle, use_tp=use_tp)
             if exit_result is not None:
                 exit_price, exit_type, pnl = exit_result
                 balance += pnl
-
-                strategy.on_trade_closed(
-                    exit_type=exit_type,
-                    exit_price=exit_price,
-                )
-
-                _append_trade_row(
-                    output_file,
-                    active_trade,
-                    exit_price,
-                    exit_type,
-                    pnl,
-                    balance,
-                )
-
+                strategy.on_trade_closed(exit_type=exit_type, exit_price=exit_price)
+                _append_trade_row(output_file, active_trade, exit_price, exit_type, pnl, balance)
                 active_trade = None
                 active_trade_entry_idx = None
-                continue
 
-            # Strategy close happens at candle close only after SL/TP check.
-            if use_close_signal and signal is not None and signal.signal == "CLOSE":
-                exit_price = candle.close
+        # 3) Only now is the candle considered closed. Update indicators.
+        strategy.update(candle)
 
-                if active_trade.direction == "BUY":
-                    pnl = (exit_price - active_trade.entry) * active_trade.position_size
-                else:
-                    pnl = (active_trade.entry - exit_price) * active_trade.position_size
+        # 4) After confirmed candle close, trail the still-open trade with the
+        # newly confirmed PSAR. This mirrors live trader trailing after update().
+        if active_trade is not None:
+            psar_sl = strategy.get_psar_sl(active_trade.direction)
+            _trail_trade_with_psar(active_trade, psar_sl)
 
-                balance += pnl
-
-                strategy.on_trade_closed(
-                    exit_type="StrategyClose",
-                    exit_price=exit_price,
-                )
-
-                _append_trade_row(
-                    output_file,
-                    active_trade,
-                    exit_price,
-                    "StrategyClose",
-                    pnl,
-                    balance,
-                )
-
-                active_trade = None
-                active_trade_entry_idx = None
-                continue
-
-            # Do not open another trade while one is active.
-            continue
-
-        # Open new trade only when flat.
-        if (
-            active_trade is None
-            and signal is not None
-            and signal.signal in ("BUY", "SELL")
-        ):
-            trade = risk_engine.build_trade(signal, balance)
-
-            if trade is None:
-                continue
-
-            active_trade = trade
-            active_trade_entry_idx = i
-            strategy.sync_trade(active_trade)
-
-    # Force-close at final candle.
     if active_trade is not None:
         last_candle = series._candles[-1]
-        exit_price = last_candle.close
-
+        exit_price = float(last_candle.close)
         if active_trade.direction == "BUY":
             pnl = (exit_price - active_trade.entry) * active_trade.position_size
         else:
             pnl = (active_trade.entry - exit_price) * active_trade.position_size
-
         balance += pnl
-
-        strategy.on_trade_closed(
-            exit_type="ForceClose",
-            exit_price=exit_price,
-        )
-
-        _append_trade_row(
-            output_file,
-            active_trade,
-            exit_price,
-            "ForceClose",
-            pnl,
-            balance,
-        )
+        strategy.on_trade_closed(exit_type="ForceClose", exit_price=exit_price)
+        _append_trade_row(output_file, active_trade, exit_price, "ForceClose", pnl, balance)
 
     print(f"\n  Backtest complete. Reading results from {output_file}...")
-
     df = pd.read_csv(output_file)
-
     if df.empty:
         print("  No trades were executed.")
         return None
 
     df["PnL"] = pd.to_numeric(df["PnL"], errors="coerce").fillna(0.0)
-
     stats = _compute_stats(df, initial_balance)
-
-    _print_stats(
-        stats,
-        symbol,
-        timeframe,
-        initial_balance,
-        balance,
-        start_date,
-        end_date,
-    )
+    _print_stats(stats, symbol, timeframe, initial_balance, balance, start_date, end_date)
 
     _append_summary_row(
         path=summary_file,
@@ -808,15 +647,15 @@ def backtest_parabolic_sar(
         cut_off=cut_off,
         initial_balance=initial_balance,
         final_balance=balance,
-        use_close_signal=use_close_signal,
         use_tp=use_tp,
         risk_percent=risk_percent,
         rr=rr,
         atr_multiplier=atr_multiplier,
         sl_mode=sl_mode,
+        intrabar_path_mode=intrabar_path_mode,
+        allow_same_candle_tp=allow_same_candle_tp,
         trade_log_file=output_file,
     )
-
     print(f"  Summary appended to {summary_file}")
 
     if plot:
@@ -831,63 +670,19 @@ def backtest_parabolic_sar(
         "candles_count": total_candles,
         "initial_balance": initial_balance,
         "final_balance": balance,
-        "use_close_signal": use_close_signal,
         "use_tp": use_tp,
         "risk_percent": risk_percent,
         "rr": rr,
         "atr_multiplier": atr_multiplier,
         "sl_mode": sl_mode,
+        "intrabar_path_mode": intrabar_path_mode,
+        "allow_same_candle_tp": allow_same_candle_tp,
         "strategy_params": strategy_params,
         **stats,
     }
 
 
 if __name__ == "__main__":
-    initial_strategy_params = {
-    "psar_step": 0.02,
-    "psar_max_step": 0.05,
-    "atr_period": 14,
-    "use_ema_trend": True,
-    "ema_trend_period": 200,
-    "ema_offset": 3,
-    "ema_slope_threshold": 0.0,
-    "use_adx": False,
-    "adx_period": 10,
-    "adx_threshold": 15.0,
-    "require_adx_bias": False,
-}
-    full_strategy_params = {
-        "psar_step": 0.005,
-        "psar_max_step": 0.05,
-        "atr_period": 14,
-        "use_ema_trend": True,
-        "ema_trend_period": 200,
-        "ema_offset": 3,
-        "ema_slope_threshold": 0.005,
-        "use_adx": False,
-    }
-
-    strategy_params2 = {
-    "psar_step": 0.025,
-    "psar_max_step": 0.05,
-    "atr_period": 14,
-    "use_ema_trend": True,
-    "ema_trend_period": 200,
-    "ema_offset": 3,
-    "ema_slope_threshold": 0.0025,
-    "use_adx": False,
-}
-    strategy_param3 = {
-        "psar_step": 0.025,
-        "psar_max_step": 0.05,
-        "atr_period": 14,
-        "use_ema_trend": True,
-        "ema_trend_period": 200,
-        "ema_offset": 3,
-        "ema_slope_threshold": 0.0,
-        "use_adx": False,
-    }
-
     strategy_params = {
         "psar_step": 0.025,
         "psar_max_step": 0.05,
@@ -896,31 +691,25 @@ if __name__ == "__main__":
         "ema_trend_period": 50,
         "ema_offset": 3,
         "ema_slope_threshold": 0.0,
-        "use_adx": False,
     }
 
-    backtest_parabolic_sar(
+    backtest_precision_psar(
         symbol=SYMBOLS["BTC"],
         timeframe="1m",
         start_date=datetime(2026, 4, 16),
         end_date=datetime(2026, 4, 28),
         cut_off=500,
         initial_balance=200.0,
-        use_close_signal=True,
         use_tp=True,
-        output_file="trades_parabolic_sar.csv",
+        output_file="trades_precision_psar.csv",
         strategy_params=strategy_params,
-        comment_name="first1 validation on unseen data",
-        summary_file="parabolic_sar_experiment_results.csv",
+        comment_name="candle dot-cross validation on unseen data",
+        summary_file="precision_psar_experiment_results.csv",
         plot=True,
-
         risk_percent=0.01,
         rr=2.0,
         atr_multiplier=1.5,
         sl_mode="WIDER",
+        intrabar_path_mode="conservative",
+        allow_same_candle_tp=False,
     )
-
-    # sl_mode = "WIDER"
-    # sl_mode = "TIGHTER"
-    # sl_mode = "PSAR"
-    # sl_mode = "ATR"

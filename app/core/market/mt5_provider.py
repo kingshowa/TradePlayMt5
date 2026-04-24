@@ -15,7 +15,7 @@ class MT5MarketDataProvider:
 
     def fetch(self, symbol: str, timeframe, bars: int) -> MarketSeries:
         """Fetches the most recent 'n' bars."""
-        rates = mt5.copy_rates_from_pos(symbol, timeframe, 0, bars)
+        rates = mt5.copy_rates_from_pos(symbol, timeframe, 1, bars)
         if rates is None:
             raise ValueError(f"No data for {symbol}")
 

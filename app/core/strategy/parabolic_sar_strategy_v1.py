@@ -20,6 +20,8 @@ class ParabolicSarStrategy:
     - Optionally filter entries using ADX strength and DI bias.
     - Optionally close trades on opposite PSAR flip.
     - Pass ATR and raw PSAR dot to the risk manager/backtest.
+    - Expose get_psar_sl() so callers (live trader, backtest) can trail
+      the stop loss every candle without needing a signal object.
 
     Important:
     - This strategy does NOT calculate final SL, TP, or position size.
@@ -125,6 +127,7 @@ class ParabolicSarStrategy:
     # ---------------------------------------------------------
     # Public API
     # ---------------------------------------------------------
+
     def update(self, candle: Candle) -> Optional[StrategySignal]:
         """
         Process one closed candle.
@@ -165,9 +168,30 @@ class ParabolicSarStrategy:
 
         return None
 
+    def get_psar_sl(self, direction: str) -> Optional[float]:
+        """
+        Return the current PSAR dot as a trailing stop level.
+
+        Called every confirmed candle by the live trader and backtest
+        to trail the open position — completely independent of whether
+        a signal was emitted this candle.
+
+        The caller is responsible for only moving the SL in the
+        favorable direction (executor.trail_position_with_psar already
+        enforces this for live; the backtest should do the same check
+        before updating active_trade.stop_loss).
+
+        Returns None if PSAR has not been initialized yet.
+        """
+        if self.current_psar is None:
+            return None
+        return float(self.current_psar)
+
     def sync_trade(self, trade: Any) -> None:
         """
-        Called only after the backtest/executor actually opens a trade.
+        Called by the backtest and live trader immediately after a trade
+        is opened. Keeps strategy's internal direction state in sync so
+        close-signal logic and cooldown gates work correctly.
         """
         self._current_trade = trade
         self._current_trade_sl = getattr(trade, "stop_loss", None)
@@ -179,6 +203,10 @@ class ParabolicSarStrategy:
         exit_type: str,
         exit_price: Optional[float] = None,
     ) -> None:
+        """
+        Called by the backtest and live trader when a trade is confirmed
+        closed. Applies the stop cooldown on SL exits.
+        """
         self._last_exit_type = exit_type
         self._last_exit_price = exit_price
 
@@ -234,6 +262,7 @@ class ParabolicSarStrategy:
     # ---------------------------------------------------------
     # Entry validation
     # ---------------------------------------------------------
+
     def _is_long_valid(self, candle: Candle) -> bool:
         return (
             self._bars_since_stop >= self._COOLDOWN_BARS
@@ -305,11 +334,12 @@ class ParabolicSarStrategy:
     # ---------------------------------------------------------
     # Close logic
     # ---------------------------------------------------------
+
     def _check_close(self, candle: Candle) -> Optional[StrategySignal]:
         """
         Close on opposite PSAR flip.
 
-        ADX should filter entries, not block emergency/structure exits.
+        ADX filters entries only — it does not block exits.
         """
         reason = None
         pattern = None
@@ -347,6 +377,7 @@ class ParabolicSarStrategy:
     # ---------------------------------------------------------
     # Entry signal builder
     # ---------------------------------------------------------
+
     def _build_entry_signal(self, direction: str, candle: Candle) -> StrategySignal:
         psar_sl = self._raw_psar_stop_loss(direction)
 
@@ -404,6 +435,7 @@ class ParabolicSarStrategy:
     # ---------------------------------------------------------
     # Trade-state helpers
     # ---------------------------------------------------------
+
     def _set_direction_from_trade(self, trade: Any) -> None:
         direction = str(getattr(trade, "direction", "")).upper()
 
