@@ -156,10 +156,10 @@ class MT5LiveExecutor:
             print(f"❌ Unsupported trade direction: {trade.direction}")
             return None
 
-        volume = round(float(trade.position_size), self.lot_precision)
-        if volume <= 0:
+        if trade.position_size <= 0:
             print("❌ Computed volume is not positive")
-            return None
+
+        volume = max(0.01, round(float(trade.position_size), self.lot_precision))
 
         request = {
             "action": mt5.TRADE_ACTION_DEAL,
@@ -191,7 +191,7 @@ class MT5LiveExecutor:
             print("⚠ Order placed, but failed to resolve live position")
             return None
 
-        print(f"🚀 Trade opened successfully @ {price} volume={volume}")
+        print(f"🚀 Trade opened successfully @ {price} volume={volume} SL={sl}")
         return int(position.ticket)
 
     # ----------------------------------------

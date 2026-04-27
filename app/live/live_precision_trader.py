@@ -181,7 +181,7 @@ class LiveTraderPrecisionPsar:
             return ask
         if expected_direction == "SELL":
             return bid
-        return (bid + ask) / 2.0
+        return bid
 
     def _get_latest_closed_candle(self) -> Optional[Candle]:
         rates = mt5.copy_rates_from_pos(self.symbol, self.timeframe, 1, 1)
@@ -406,9 +406,11 @@ class LiveTraderPrecisionPsar:
 
         forming_candle = self._get_current_forming_candle()
 
+        trend = self.strategy.state().get("psar_trend")
+        # print(trend)
         # First use a neutral price to allow the strategy to detect direction.
-        neutral_price = self._get_tick_entry_price(tick)
-        signal = self.strategy.on_tick(price=neutral_price, candle=forming_candle)
+        price = self._get_tick_entry_price(tick)
+        signal = self.strategy.on_tick(price=price, candle=forming_candle)
 
         if signal is None:
             return

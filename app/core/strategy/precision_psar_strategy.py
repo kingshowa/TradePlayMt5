@@ -249,12 +249,29 @@ class PrecisionPsarStrategy:
 
     def get_psar_sl(self, direction: str) -> Optional[float]:
         """
-        Return the confirmed PSAR trailing stop for an already-open trade.
+        Return the best available PSAR trailing stop for an already-open trade.
 
-        Caller/executor must still move SL only in the favorable direction.
+        If trade direction is ahead of the confirmed PSAR trend, use EP as the
+        estimated reversal PSAR until the closed-candle update confirms the flip.
         """
+        direction = str(direction).upper()
+        psar_trend = self.state().get("psar_trend")
+
+        trade_ahead_of_confirmed_flip = (
+                (direction == "BUY" and psar_trend == "DOWN")
+                or
+                (direction == "SELL" and psar_trend == "UP")
+        )
+
+        if trade_ahead_of_confirmed_flip:
+            ep = self.psar.ep
+            if ep is None:
+                return None
+            return float(ep)
+
         if self.current_psar is None:
             return None
+
         return float(self.current_psar)
 
     def sync_trade(self, trade: Any) -> None:
