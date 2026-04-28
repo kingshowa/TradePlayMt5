@@ -6,11 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="e90a5bf1-5a4e-429b-8041-2516a21ea24d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/strategy/precision_psar_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/strategy/precision_psar_strategy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/live/live_precision_psar_trades_log.csv" beforeDir="false" afterPath="$PROJECT_DIR$/app/live/live_precision_psar_trades_log.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/live/live_precision_trader.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/live/live_precision_trader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/live/mt5_live_executor.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/live/mt5_live_executor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_experiment_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_experiment_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/precision_psar_backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/precision_psar_backtest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/backtest/1m/precision_psar_experiment_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/precision_psar_experiment_results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/save_candles.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/save_candles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/backtest/1m/trades_parabolic_sar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/trades_parabolic_sar.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/backtest/1m/trades_precision_psar.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/backtest/1m/trades_precision_psar.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -131,7 +132,7 @@
       <recent name="C:\Users\21355\MasterIoT\Sem3\TradePlayMt5\test\backtest\1m" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.precision_psar_backtest">
+  <component name="RunManager" selected="Python.save_candles">
     <configuration name="live_precision_trader" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
@@ -198,28 +199,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="parabolic_sar_parameter_study_1m" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="TradePlayMt5" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest/1m" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/1m/parabolic_sar_parameter_study_1m.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="precision_psar_backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TradePlayMt5" />
       <option name="ENV_FILES" value="" />
@@ -242,13 +221,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="save_candles" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TradePlayMt5" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/backtest/1m" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/backtest/1m/save_candles.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.live_precision_trader" />
+        <item itemvalue="Python.save_candles" />
         <item itemvalue="Python.precision_psar_backtest" />
         <item itemvalue="Python.parabolic_sar_backtest1m" />
+        <item itemvalue="Python.live_precision_trader" />
         <item itemvalue="Python.live_trader_psar" />
-        <item itemvalue="Python.parabolic_sar_parameter_study_1m" />
       </list>
     </recent_temporary>
   </component>

@@ -6,11 +6,11 @@ from app.core.market.mt5_timeframes import TIMEFRAMES
 # =========================
 # Configuration
 # =========================
-SYMBOL = "XAUUSDm"  # Gold
-TIMEFRAME_KEY = "1m"  # 1 Minute timeframe
+SYMBOL = "BTCUSDm"  # Gold
+TIMEFRAME_KEY = "5m"  # 1 Minute timeframe
 START_DATE = datetime(2024, 1, 1)  # Year, Month, Day
 END_DATE = datetime(2026, 3, 30)
-OUTPUT_FILENAME = "gold_historical_data.csv"
+OUTPUT_FILENAME = "btc_historical_data.csv"
 
 
 def save_range_to_csv(symbol, timeframe, start, end, filename):
@@ -20,11 +20,17 @@ def save_range_to_csv(symbol, timeframe, start, end, filename):
     provider = MT5MarketDataProvider()
 
     # 1. Use fetch_range as implemented in parabolic_sar_backtest1m.py
-    series = provider.fetch_range(
+    # series = provider.fetch_range(
+    #     symbol,
+    #     TIMEFRAMES[timeframe],
+    #     start,
+    #     end
+    # )
+
+    series = provider.fetch(
         symbol,
         TIMEFRAMES[timeframe],
-        start,
-        end
+        200
     )
 
     candles = series.candles()

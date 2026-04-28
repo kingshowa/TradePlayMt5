@@ -30,6 +30,65 @@ SYMBOLS = {
     "ETH": "ETHUSDm",
 }
 
+# Pip size (price units per 1 pip) for each known symbol.
+# Used to convert broker-quoted spread in pips → raw price distance.
+#
+# Standard FX pairs:       0.0001  (e.g. EUR/USD, 1 pip = 0.0001)
+# JPY cross pairs:          0.01   (e.g. EUR/JPY, 1 pip = 0.01)
+# Gold  (XAU/USD):          0.01   (MT5 standard; some brokers quote 0.1)
+# Silver (XAG/USD):         0.001
+# Platinum (XPT/USD):       0.01
+# Crude Oil (WTI):          0.01
+# BTC/USD:                  0.1    (1 pip = $0.10; override if broker differs)
+# ETH/USD:                  0.1    (1 pip = $0.10)
+#
+# If your broker uses a different convention, pass pip_size= explicitly.
+PIP_SIZES: dict[str, float] = {
+    "XAUUSDm":  0.01,
+    "XAGUSDm":  0.001,
+    "XPTUSDm":  0.01,
+    "USOILm":   0.01,
+    "EURUSDm":  0.0001,
+    "EURJPYm":  0.01,
+    "BTCUSDm":  0.1,
+    "ETHUSDm":  0.1,
+}
+
+
+def resolve_pip_size(symbol: str, pip_size_override: Optional[float] = None) -> float:
+    """
+    Return the pip size (price units per 1 pip) for *symbol*.
+
+    Priority:
+      1. pip_size_override if explicitly provided
+      2. PIP_SIZES lookup (exact match, then case-insensitive strip of trailing 'm')
+      3. Raises ValueError so an unknown symbol never silently uses a wrong value.
+    """
+    if pip_size_override is not None:
+        if pip_size_override <= 0:
+            raise ValueError(f"pip_size must be > 0, got {pip_size_override}")
+        return float(pip_size_override)
+
+    if symbol in PIP_SIZES:
+        return PIP_SIZES[symbol]
+
+    # Case-insensitive fallback (e.g. "btcusd" matches "BTCUSDm")
+    symbol_norm = symbol.upper().rstrip("M")
+    for key, size in PIP_SIZES.items():
+        if key.upper().rstrip("M") == symbol_norm:
+            return size
+
+    known = ", ".join(sorted(PIP_SIZES.keys()))
+    raise ValueError(
+        f"Unknown symbol '{symbol}' — pip size cannot be determined automatically. "
+        f"Pass pip_size=<value> explicitly. Known symbols: {known}"
+    )
+
+
+def pips_to_price(pips: float, symbol: str, pip_size_override: Optional[float] = None) -> float:
+    """Convert a spread quoted in pips to raw price units for *symbol*."""
+    return pips * resolve_pip_size(symbol, pip_size_override)
+
 
 @dataclass
 class BacktestTrade:
@@ -47,6 +106,9 @@ class BacktestTrade:
     sl_source: str
     psar_sl: Optional[float]
     atr_sl: Optional[float]
+    spread: float = 0.0
+    raw_entry: float = 0.0  # trigger price before spread adjustment
+    spread_pips: float = 0.0  # spread as originally quoted in pips
 
 
 class BacktestRiskManager:
@@ -66,6 +128,7 @@ class BacktestRiskManager:
         rr: float = 2.0,
         atr_multiplier: float = 1.5,
         sl_mode: str = "WIDER",
+        spread: float = 0.0,
     ):
         if risk_percent <= 0:
             raise ValueError("risk_percent must be greater than 0")
@@ -73,6 +136,8 @@ class BacktestRiskManager:
             raise ValueError("rr must be greater than 0")
         if atr_multiplier <= 0:
             raise ValueError("atr_multiplier must be greater than 0")
+        if spread < 0:
+            raise ValueError("spread must be >= 0")
 
         sl_mode = sl_mode.upper()
         if sl_mode not in self.VALID_SL_MODES:
@@ -82,11 +147,13 @@ class BacktestRiskManager:
         self.rr = rr
         self.atr_multiplier = atr_multiplier
         self.sl_mode = sl_mode
+        self.spread = spread
+        self.spread_pips = 0.0  # set externally after pip→price conversion
 
     def build_trade(self, signal, balance: float) -> Optional[BacktestTrade]:
         direction = str(signal.signal).upper()
         candle = signal.candle
-        entry = float(candle.close)
+        raw_entry = float(candle.close)
         atr = signal.atr
         psar_sl = signal.sl
 
@@ -94,6 +161,24 @@ class BacktestRiskManager:
             return None
         if atr is None or atr <= 0:
             return None
+
+        # ------------------------------------------------------------------
+        # Spread model for MT5 BID-based candle data:
+        #
+        # MT5 OHLC candles are built from BID prices. Therefore:
+        #   BUY entry  executes at ASK = BID + spread
+        #   BUY exit   closes at BID
+        #   SELL entry executes at BID
+        #   SELL exit  closes at ASK = BID + spread
+        #
+        # Do NOT shift SELL entry down to pre-charge spread. That makes SELL
+        # SL/TP triggering wrong. Instead, keep SELL entry in BID space and
+        # apply spread during SELL exit checks.
+        # ------------------------------------------------------------------
+        if direction == "BUY":
+            entry = raw_entry + self.spread
+        else:
+            entry = raw_entry
 
         atr_sl = self._atr_stop(direction, candle, float(atr))
         final_sl, sl_source = self._select_stop(direction, entry, psar_sl, atr_sl)
@@ -127,6 +212,9 @@ class BacktestRiskManager:
             sl_source=sl_source,
             psar_sl=psar_sl,
             atr_sl=atr_sl,
+            spread=self.spread,
+            raw_entry=raw_entry,
+            spread_pips=self.spread_pips,
         )
 
     def _atr_stop(self, direction: str, candle, atr: float) -> float:
@@ -185,26 +273,36 @@ class TradeSimulation:
     @staticmethod
     def check_exit(trade: BacktestTrade, candle, use_tp: bool = True):
         direction = trade.direction.upper()
-        entry = trade.entry
-        sl = trade.stop_loss
+        entry = float(trade.entry)
+        sl = float(trade.stop_loss)
         tp = trade.take_profit
-        size = trade.position_size
+        size = float(trade.position_size)
+        spread = float(getattr(trade, "spread", 0.0) or 0.0)
 
         if direction == "BUY":
-            if candle.low <= sl:
+            # BUY closes at BID, and MT5 candles are BID candles.
+            if float(candle.low) <= sl:
                 return sl, "SL", (sl - entry) * size
-            if use_tp and tp is not None and candle.high >= tp:
-                return tp, "TP", (tp - entry) * size
+
+            if use_tp and tp is not None and float(candle.high) >= float(tp):
+                return float(tp), "TP", (float(tp) - entry) * size
+
         else:
-            if candle.high >= sl:
+            # SELL closes at ASK. Convert candle BID extremes to ASK extremes.
+            ask_high = float(candle.high) + spread
+            ask_low = float(candle.low) + spread
+
+            if ask_high >= sl:
                 return sl, "SL", (entry - sl) * size
-            if use_tp and tp is not None and candle.low <= tp:
-                return tp, "TP", (entry - tp) * size
+
+            if use_tp and tp is not None and ask_low <= float(tp):
+                return float(tp), "TP", (entry - float(tp)) * size
+
         return None
 
 
 _CSV_HEADER = [
-    "EntryTime", "Direction", "Entry", "SL", "TP", "PositionSize",
+    "EntryTime", "Direction", "RawEntry", "Entry", "Spread", "SpreadPips", "SL", "TP", "PositionSize",
     "RiskAmount", "StopDistance", "RR", "SLSource", "PSAR_SL", "ATR_SL",
     "ExitPrice", "ExitType", "PnL", "BalanceAfter", "Pattern", "Reason",
 ]
@@ -212,6 +310,7 @@ _CSV_HEADER = [
 _SUMMARY_HEADER = [
     "RunTimestamp", "Comment", "Symbol", "Timeframe", "StartDate", "EndDate",
     "Candles", "CutOff", "InitialBalance", "FinalBalance", "UseTP",
+    "UseSpread", "Spread", "SpreadPips", "PipSize",
     "RiskPercent", "RR", "ATRMultiplier", "SLMode", "IntrabarPathMode",
     "SameCandleTP", "TotalTrades", "Wins", "Losses", "Breakeven", "WinRate",
     "ProfitFactor", "AvgWin", "AvgLoss", "BestTrade", "WorstTrade", "TotalPnL",
@@ -232,7 +331,10 @@ def _append_trade_row(path: str, trade: BacktestTrade, exit_price: float, exit_t
         csv.writer(file).writerow([
             trade.candle.time,
             trade.direction,
+            f"{trade.raw_entry:.5f}",
             f"{trade.entry:.5f}",
+            f"{trade.spread:.5f}",
+            f"{trade.spread_pips:.2f}",
             f"{trade.stop_loss:.5f}",
             f"{trade.take_profit:.5f}" if trade.take_profit is not None else "",
             f"{trade.position_size:.6f}",
@@ -307,7 +409,7 @@ def _compute_stats(df: pd.DataFrame, initial_balance: float) -> dict:
 def _print_stats(stats: dict, symbol: str, timeframe: str, initial_balance: float, final_balance: float, start_date: datetime, end_date: datetime) -> None:
     sep = "─" * 62
     print(f"\n{sep}")
-    print(f"  Precision PSAR Live-Tick Backtest — {symbol} {timeframe.upper()}")
+    print(f"  Precision PSAR Candle Dot-Cross Backtest — {symbol} {timeframe.upper()}")
     print(f"  Period: {start_date.date()} → {end_date.date()}")
     print(sep)
     print(f"  {'Initial balance':<30} {initial_balance:>10.2f}")
@@ -340,7 +442,7 @@ def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
 
     fig = plt.figure(figsize=(14, 9))
     fig.suptitle(
-        f"Precision PSAR Live-Tick Backtest — {symbol} {timeframe.upper()}   "
+        f"Precision PSAR Candle Dot-Cross Backtest — {symbol} {timeframe.upper()}   "
         f"{start_date.date()} → {end_date.date()}   "
         f"Win rate: {stats['win_rate'] * 100:.1f}%   "
         f"PF: {stats['profit_factor']:.2f}   "
@@ -381,6 +483,7 @@ def _plot_results(df, stats, symbol, timeframe, start_date, end_date):
 def _append_summary_row(
     path, comment_name, stats, strategy_params, symbol, timeframe, start_date,
     end_date, candles_count, cut_off, initial_balance, final_balance, use_tp,
+    use_spread, spread, spread_pips, pip_size,
     risk_percent, rr, atr_multiplier, sl_mode, intrabar_path_mode,
     allow_same_candle_tp, trade_log_file,
 ):
@@ -401,6 +504,10 @@ def _append_summary_row(
         "InitialBalance": f"{initial_balance:.2f}",
         "FinalBalance": f"{final_balance:.4f}",
         "UseTP": use_tp,
+        "UseSpread": use_spread,
+        "Spread": f"{spread:.5f}",
+        "SpreadPips": f"{spread_pips:.2f}",
+        "PipSize": f"{pip_size:.6f}",
         "RiskPercent": risk_percent,
         "RR": rr,
         "ATRMultiplier": atr_multiplier,
@@ -516,6 +623,9 @@ def backtest_precision_psar(
     sl_mode: str = "WIDER",
     intrabar_path_mode: str = "conservative",
     allow_same_candle_tp: bool = False,
+    use_spread: bool = False,
+    spread_pips: float = 0.0,
+    pip_size: Optional[float] = None,
 ) -> Optional[dict]:
     print("\n  Precision PSAR Backtest — Candle Dot Cross")
     print(f"  Symbol: {symbol} | Timeframe: {timeframe}")
@@ -523,6 +633,14 @@ def backtest_precision_psar(
     print(f"  Initial balance: {initial_balance:.2f}")
     print(f"  Risk: {risk_percent * 100:.2f}% | RR: {rr:.2f} | ATR SL: {atr_multiplier:.2f}x | SL mode: {sl_mode}")
     print(f"  Take profit: {use_tp}")
+    # Resolve pip size and convert spread to price units before anything else
+    # so errors surface immediately rather than mid-run.
+    resolved_pip_size = resolve_pip_size(symbol, pip_size)
+    effective_spread = pips_to_price(spread_pips, symbol, pip_size) if use_spread else 0.0
+    if use_spread:
+        print(f"  Spread: ENABLED  {spread_pips} pips × pip_size {resolved_pip_size} = {effective_spread:.5f} price units")
+    else:
+        print(f"  Spread: DISABLED (no-spread mode)")
     print(f"  Intrabar path: {intrabar_path_mode} | Same-candle TP: {allow_same_candle_tp}")
     print(f"  Warm-up candles: {cut_off}")
     print(f"  Comment: {comment_name}")
@@ -545,7 +663,8 @@ def backtest_precision_psar(
 
     warmup_series = series.subseries(0, cut_off)
     strategy = PrecisionPsarStrategy(warmup_series, **strategy_params)
-    risk_engine = BacktestRiskManager(risk_percent=risk_percent, rr=rr, atr_multiplier=atr_multiplier, sl_mode=sl_mode)
+    risk_engine = BacktestRiskManager(risk_percent=risk_percent, rr=rr, atr_multiplier=atr_multiplier, sl_mode=sl_mode, spread=effective_spread)
+    risk_engine.spread_pips = spread_pips if use_spread else 0.0
 
     balance = initial_balance
     active_trade: Optional[BacktestTrade] = None
@@ -615,10 +734,13 @@ def backtest_precision_psar(
 
     if active_trade is not None:
         last_candle = series._candles[-1]
-        exit_price = float(last_candle.close)
         if active_trade.direction == "BUY":
+            # BUY exits at BID. Last candle close is BID.
+            exit_price = float(last_candle.close)
             pnl = (exit_price - active_trade.entry) * active_trade.position_size
         else:
+            # SELL exits at ASK = BID + spread.
+            exit_price = float(last_candle.close) + float(active_trade.spread)
             pnl = (active_trade.entry - exit_price) * active_trade.position_size
         balance += pnl
         strategy.on_trade_closed(exit_type="ForceClose", exit_price=exit_price)
@@ -648,6 +770,10 @@ def backtest_precision_psar(
         initial_balance=initial_balance,
         final_balance=balance,
         use_tp=use_tp,
+        use_spread=use_spread,
+        spread=effective_spread,
+        spread_pips=spread_pips if use_spread else 0.0,
+        pip_size=resolved_pip_size,
         risk_percent=risk_percent,
         rr=rr,
         atr_multiplier=atr_multiplier,
@@ -671,6 +797,10 @@ def backtest_precision_psar(
         "initial_balance": initial_balance,
         "final_balance": balance,
         "use_tp": use_tp,
+        "use_spread": use_spread,
+        "spread": effective_spread,
+        "spread_pips": spread_pips if use_spread else 0.0,
+        "pip_size": resolved_pip_size,
         "risk_percent": risk_percent,
         "rr": rr,
         "atr_multiplier": atr_multiplier,
@@ -687,19 +817,36 @@ if __name__ == "__main__":
         "psar_step": 0.025,
         "psar_max_step": 0.05,
         "atr_period": 14,
-        "use_ema_trend": True,
-        "ema_trend_period": 50,
+        "use_ema_trend": False,
+        "ema_trend_period": 200,
         "ema_offset": 3,
         "ema_slope_threshold": 0.0,
     }
 
+    # ------------------------------------------------------------------
+    # Spread toggle
+    #
+    # use_spread=False  → no spread cost, ideal baseline (original behaviour)
+    # use_spread=True   → applies spread to each entry so you can measure
+    #                     the real-world impact.
+    #
+    # spread_pips: enter the spread as your broker quotes it, in pips.
+    #   Typical values:
+    #     BTC/USD (BTCUSDm):   broker-specific; verify MT5 spread and pip_size
+    #     EUR/USD (EURUSDm):   1–2 pips  (pip_size=0.0001 → 0.0001–0.0002)
+    #     Gold    (XAUUSDm):  20–50 pips (pip_size=0.01 → $0.20–$0.50)
+    #
+    # pip_size: leave as None to auto-detect from SYMBOLS / PIP_SIZES dict.
+    #           Pass a float to override (e.g. pip_size=0.1 if your broker
+    #           quotes Gold in 0.1-unit pips instead of the default 0.01).
+    # ------------------------------------------------------------------
     backtest_precision_psar(
         symbol=SYMBOLS["BTC"],
-        timeframe="1m",
-        start_date=datetime(2026, 4, 16),
+        timeframe="1d",
+        start_date=datetime(2020, 1, 22),
         end_date=datetime(2026, 4, 28),
-        cut_off=500,
-        initial_balance=200.0,
+        cut_off=200,
+        initial_balance=2000.0,
         use_tp=True,
         output_file="trades_precision_psar.csv",
         strategy_params=strategy_params,
@@ -709,7 +856,10 @@ if __name__ == "__main__":
         risk_percent=0.01,
         rr=2.0,
         atr_multiplier=1.5,
-        sl_mode="WIDER",
+        sl_mode="PSAR",
         intrabar_path_mode="conservative",
         allow_same_candle_tp=False,
+        use_spread=True,    # ← flip to True to include spread cost
+        spread_pips=1400,     # ← spread as quoted by your broker; verify pip_size first
+        pip_size=0.01,       # ← None = auto-detect; override if needed
     )
